@@ -1,6 +1,5 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+bin/
+# Eclipse stuff
+.classpath
+.project
+.settings
