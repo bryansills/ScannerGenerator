@@ -10,46 +10,19 @@ import java.util.Set;
  * @author magicjarvis
  */
 public class CharClasses {
-  private Map<String, Set<Character>> classes;
+
+  private CharClasses(String classSpec) {}
 
   /**
-   * Creates a CharClasses object based on
-   * $DIGIT   [0-9]
-   * $NON-ZERO    [^0]  IN  $DIGIT
-   * $CHAR   [a-zA-Z]
-   * $UPPER  [^a-z] IN $CHAR
-   * Doesn't handle the regex spec if included. (so don't include it)
-   * @param spec
+   * Returns a map containing the character classes and accepted chars.
+   * @param classSpec
+   * @return
    * @throws BadSpecException
    */
-  public CharClasses(String spec) throws BadSpecException {
-    classes = new HashMap<String, Set<Character>>();
-    buildMapFromSpec(spec);
-  }
-
-  /**
-   * This method tells you whether a defined character class
-   * accepts a specified character c.
-   * @param charClass The class in question.
-   * @param c the character you're testing.
-   * @return whether it is accepted.
-   */
-  public boolean accept(String charClass, Character c) {
-    return classes.get(charClass).contains(c);
-  }
-  /**
-   * Returns the set of accepted characters for a class.
-   * Used exclusively for testing.
-   * @param charClass The class
-   * @return the associated characters
-   */
-  Set<Character> get(String charClass) {
-    return classes.get(charClass);
-  }
-
-  private void buildMapFromSpec(String spec) throws BadSpecException {
+  public static Map<String, Set<Character>> buildMapFromSpec(String classSpec) throws BadSpecException {
+    Map<String, Set<Character>> classes = new HashMap<String, Set<Character>>();
     // split into lines
-    String[] lines = spec.split("\n");
+    String[] lines = classSpec.split("\n");
     for (String line : lines) {
       // break up the line into parts.
       String[] tokens = line.split(" ");
@@ -106,5 +79,6 @@ public class CharClasses {
       }
     }
     System.out.println(classes);
+    return classes;
   }
 }
