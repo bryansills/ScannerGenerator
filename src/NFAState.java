@@ -69,7 +69,7 @@ public class NFAState {
    * @return
    */
   public boolean acceptsChar(Character c) {
-    return transition == null && c == null || transition.contains(c);
+    return transition == null || transition.contains(c);
   }
 
   /**
@@ -86,6 +86,10 @@ public class NFAState {
    */
   public void addNext(NFAState state) {
     nextStates.add(state);
+  }
+
+  public List<NFAState> getNextStates() {
+    return nextStates;
   }
 
 }
