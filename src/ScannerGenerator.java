@@ -19,13 +19,13 @@ public class ScannerGenerator {
       BufferedReader in = new BufferedReader(new FileReader(new File(args[0])));
       StringBuffer classSpec = new StringBuffer();
       StringBuffer spec = new StringBuffer();
-      String line = in.readLine();
-      while (line != null && !line.equals("")) {
+      String line;
+      while ((line = in.readLine()) != null && !line.equals("")) {
         classSpec.append(line);
         classSpec.append('\n');
       }
 
-      while (line != null) {
+      while ((line = in.readLine()) != null) {
         spec.append(line);
         spec.append('\n');
       }
