@@ -1,5 +1,10 @@
 bin/
+docs/
+
 # Eclipse stuff
 .classpath
 .project
 .settings
+
+# IntelliJ stuff
+*.iml
