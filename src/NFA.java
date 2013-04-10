@@ -8,17 +8,18 @@ import java.util.Set;
  */
 public class NFA {
   private NFAState start;
-  //private List<NFAState> acceptStates = [];
+  private Set<Character> chars;
 
   /**
    * Creates a primitive nfa based on a char class
    * @param chars the accepted characters from a char class
    */
   public NFA(Set<Character> chars) {
+  	this.chars = chars;
   }
 
   /**
-   * 
+   * Returns a list of accept states in a given NFA.
    */
   public List<NFAState> findAcceptStates(NFA nfa) {
   	List<NFAState> acceptStates = [];
@@ -53,9 +54,15 @@ public class NFA {
   	return start;
   }
 
-	/*
-  public List<NFAState> getAcceptStates() {
-  	return acceptStates;
+  public void setStartState(NFAState start) {
+  	this.start = start;
   }
-  */
+
+  public Set<Character> getChars() {
+  	return chars;
+  }
+
+  public void setChars(Set<Character> chars) {
+  	this.chars = chars;
+  }
 }
