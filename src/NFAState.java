@@ -36,6 +36,10 @@ public class NFAState {
     this(false, transition);
   }
 
+  public NFAState(Set<Character> transition, List<NFAState> nextStates) {
+    this(false, transition, nextStates);
+  }
+
   /**
    * The states we enter after accepting a character
    * @param c
@@ -73,7 +77,8 @@ public class NFAState {
    * @return
    */
   public boolean acceptsChar(Character c) {
-    return transition == null && c == null || transition.contains(c);
+    return transition == null && c == null
+        || transition != null && transition.contains(c);
   }
 
   /**

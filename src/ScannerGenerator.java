@@ -3,11 +3,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
 public class ScannerGenerator {
+
   public static void main(String[] args) {
     if (args.length < 1) {
       System.out.println("Usage: java ScannerGenerator <spec-file>");
@@ -32,7 +35,7 @@ public class ScannerGenerator {
 
       Map<String, Set<Character>> classes = CharClasses.buildMapFromSpec(classSpec.toString());
 
-      //List<NFA> classNfa = new ArrayList<NFA>();
+      List<NFA> classNfa = new ArrayList<NFA>();
       for (String cls : classes.keySet()) {
         System.out.println(cls);
         //classNFA.add()
@@ -51,5 +54,9 @@ public class ScannerGenerator {
       System.err.println("Spec is messed up");
       e.printStackTrace();
     }
+  }
+
+  public NFA recursiveDescent() {
+    return null;
   }
 }

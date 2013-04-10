@@ -12,14 +12,17 @@ import java.util.Stack;
  */
 public class NFA {
   private NFAState start;
-  private Set<Character> chars;
 
   /**
    * Creates a primitive nfa based on a char class
    * @param chars the accepted characters from a char class
    */
   public NFA(Set<Character> chars) {
-  	this.chars = chars;
+    NFAState acceptState = new NFAState();
+    acceptState.setTransition(chars); // TODO(magicjarvis): use builder pattern. this is bad.
+    List<NFAState> states = new ArrayList<NFAState>();
+    states.add(acceptState);
+    this.start = new NFAState(null, states); // create the start state
   }
 
   /**
@@ -42,7 +45,7 @@ public class NFA {
   		}
 
   		for(NFAState nextState : temp.getNextStates()) {
-  			if((!nextStatesToExplore.contains(nextState)) 
+  			if((!nextStatesToExplore.contains(nextState))
   				&& (!discovered.contains(nextState))) {
   				nextStatesToExplore.push(nextState);
   			}
@@ -60,13 +63,5 @@ public class NFA {
 
   public void setStartState(NFAState start) {
   	this.start = start;
-  }
-
-  public Set<Character> getChars() {
-  	return chars;
-  }
-
-  public void setChars(Set<Character> chars) {
-  	this.chars = chars;
   }
 }
