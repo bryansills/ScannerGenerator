@@ -9,7 +9,7 @@ public class NFAState {
   private List<NFAState> nextStates;
   private boolean accept;
 
-  private NFAState(boolean accept, Set<Character> transition, List<NFAState> nextStates) {
+  public NFAState(boolean accept, Set<Character> transition, List<NFAState> nextStates) {
     this.accept = accept;
     this.transition = transition;
     this.nextStates = nextStates;
@@ -57,6 +57,10 @@ public class NFAState {
    */
   public Set<Character> getTransition() {
     return transition;
+  }
+
+  public void setTransition(Set<Character> transition) {
+      this.transition = transition;
   }
 
   public boolean isAccept() {

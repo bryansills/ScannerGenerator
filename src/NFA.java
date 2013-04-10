@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 
 /**
@@ -21,14 +25,14 @@ public class NFA {
   /**
    * Returns a list of accept states in a given NFA.
    */
-  public List<NFAState> findAcceptStates(NFA nfa) {
-  	List<NFAState> acceptStates = [];
+  public List<NFAState> findAcceptStates() {
+  	List<NFAState> acceptStates = new ArrayList<NFAState>();
 
   	Set<NFAState> discovered = new HashSet<NFAState>();
   	Stack<NFAState> nextStatesToExplore = new Stack<NFAState>();
   	NFAState temp;
 
-  	nextStatesToExplore.push(nfa.getStartState());
+  	nextStatesToExplore.push(getStartState());
 
   	while(!nextStatesToExplore.empty()) {
   		temp = nextStatesToExplore.pop();

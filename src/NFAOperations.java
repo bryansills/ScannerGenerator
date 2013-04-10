@@ -1,3 +1,8 @@
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * A class to hold operations performed on NFAs including concat, union, star, and plus.
  */
@@ -18,7 +23,7 @@ public class NFAOperations {
 	  	}
 	  	// set accept state of a next to start state of b
 
-	  	return a;
+	  	return nfa_a;
   	}
 
   	/**
@@ -26,7 +31,7 @@ public class NFAOperations {
   	 * Ex. ($DIGIT | $LOWER)
   	 */
   	public static NFA union(NFA nfa_a, NFA nfa_b) {
-  		Set<Character> newSet = new Set<Character>(nfa_a.getChars());
+  		Set<Character> newSet = new HashSet<Character>(nfa_a.getChars());
   		newSet.addAll(nfa_b.getChars());
 
   		//create new nfa to hold unioned nfas
@@ -36,12 +41,12 @@ public class NFAOperations {
   		//set transition into a and b to null for empty string
   		nfa_a.getStartState().setTransition(null);
   		nfa_b.getStartState().setTransition(null);
-  		newNFA.setStartState(new NFAState(false, new Set<Character>(), nextStates));
+  		newNFA.setStartState(new NFAState(false, new HashSet<Character>(), nextStates));
 
   		//create final state
   		NFAState finalState = new NFAState(true, null, null);
   		List<NFAState> acceptStates = nfa_a.findAcceptStates();
-  		acceptStates.addAll(nfa_b.findAcceptStates);
+  		acceptStates.addAll(nfa_b.findAcceptStates());
 
   		//point a and b accept states to finalstate
   		for(NFAState acceptState : acceptStates) {
@@ -66,6 +71,8 @@ public class NFAOperations {
 
   		nfa_a.getStartState().setAccept(true);
   		nfa_a.getStartState().setTransition(null);
+
+        return nfa_a;
   	}
 
   	/**
