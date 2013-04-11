@@ -11,21 +11,28 @@ public class DFA {
 	private List<Set<Character>> transitionsSeen;
 	private NFAState focus;
 	
-	public DFA(Set<Character> chars) {
-		
-		DFAState acceptState = new DFAState();
-		
-		
-		//this.start = new DFAState(null, states);
+	public DFA(Set<Character> chars) {}
+	
+	/**
+	 * Constructor that builds a DFA out of an NFA.
+	 * @param nfa
+	 */
+	public DFA(NFA nfa) {
+		nfaToDfa(nfa);
 	}
 	
-	public DFA(NFA nfa) {
+	/**
+	 * Takes in an NFA and converts it to a DFA
+	 * @param nfa
+	 */
+	public void nfaToDfa(NFA nfa) {
 		focus = nfa.getStartState();
 		nfaStates = nfa.getAllStates();
 		transitionsSeen = new ArrayList<Set<Character>>();
 		List<NFAState> visited = new ArrayList<NFAState>();
 		curr = new DFAState();
 		
+		/* Execute until you've visited every NFAState */
 		while(!visited.equals(nfaStates)) {
 			if(start == null) {
 				start = new DFAState(0);
@@ -37,7 +44,7 @@ public class DFA {
 	}
 	
 	/**
-	 * A recursive helper method for the constructor
+	 * A recursive helper method for nfaToDfa
 	 * 
 	 * @param focus
 	 * @return
@@ -50,6 +57,10 @@ public class DFA {
 		List<NFAState> nextStates = focus.getNextStates();
 		
 		for(NFAState nfaState: nextStates) {
+			/* Check each adjecent state and see if its transition is epsilon.
+			 * If it is, add the id of the NFAState to the DFAState. If the
+			 * If the NFA state is accept, transfer that to the new DFA>
+			 */
 			if(nfaState.getTransition() == null) {
 				curr.addToIdList(nfaStates.indexOf(nfaState)); // test this hard
 				
@@ -58,6 +69,9 @@ public class DFA {
 				}
 			}
 			else {
+				/*
+				 * If you haven't seen that transition yet, add it to the DFA
+				 */
 				if(!transitionsSeen.contains(nfaState.getTransition())) {
 					curr.getNextStates().add(new DFAState(false, nfaState.getTransition()));
 					transitionsSeen.add(nfaState.getTransition());
@@ -69,6 +83,10 @@ public class DFA {
 					}
 				}
 				else {
+					/*
+					 * If you've seen a transition before, but it wasn't the last
+					 * transition modified in your DFA
+					 */
 					for(DFAState state : this.getAllStates()) {
 						if(state.next(nfaState.getTransition()).getTransition() == nfaState.getTransition()) {
 							curr = state.next(nfaState.getTransition());
@@ -89,6 +107,9 @@ public class DFA {
 		}
 	}
 	
+	/**
+	 * @return A list of all of the DFAStates in the DFA
+	 */
 	public List<DFAState> getAllStates() {
 		List<DFAState> allStates = new ArrayList<DFAState>();
 		
