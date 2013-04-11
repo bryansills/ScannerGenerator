@@ -1,9 +1,9 @@
+import static org.junit.Assert.assertFalse;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 public class NFATest {
 
@@ -62,15 +62,16 @@ public class NFATest {
     public void chainedAcceptWithEmpty() {
 
         NFA result = new NFA(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})));
-        result.getStartState().getNextStates().get(0).setAccept(false)
-                                                     .addNext(NFAState.builder()
-                .setAccept(false)
-                .setTransition(null)
-                .addNextState(NFAState.builder()
-                        .setAccept(true)
-                        .setTransition(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})))
-                        .build())
-                .build());
+        result.getStartState().getNextStates().get(0)
+          .setAccept(false)
+          .addNext(NFAState.builder()
+              .setAccept(false)
+              .setTransition(null)
+              .addNextState(NFAState.builder()
+                  .setAccept(true)
+                  .setTransition(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})))
+                  .build())
+          .build());
 
         assert(result.accepts("aa"));
         assert(result.accepts("ac"));

@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,17 +14,19 @@ public class CharClasses {
 
   private CharClasses(String classSpec) {}
 
+  public static Map<String, Set<Character>> buildMapFromSpec(String classSpec) throws BadSpecException {
+    return buildMapFromSpec(Arrays.asList(classSpec.split("\n")));
+  }
   /**
    * Returns a map containing the character classes and accepted chars.
    * @param classSpec
    * @return
    * @throws BadSpecException
    */
-  public static Map<String, Set<Character>> buildMapFromSpec(String classSpec) throws BadSpecException {
+  public static Map<String, Set<Character>> buildMapFromSpec(List<String> classSpec) throws BadSpecException {
     Map<String, Set<Character>> classes = new HashMap<String, Set<Character>>();
     // split into lines
-    String[] lines = classSpec.split("\n");
-    for (String line : lines) {
+    for (String line : classSpec) {
       // break up the line into parts.
       String[] tokens = line.split(" ");
       Set<Character> chars = new HashSet<Character>();
@@ -33,6 +36,7 @@ public class CharClasses {
       classes.put(tokens[0], chars);
       char[] range = tokens[1].toCharArray();
       if (range[0] != '[' || range[range.length - 1] != ']') {
+        System.err.println("Failed Reading: " + tokens[1]);
         throw new BadSpecException("Malformed braces. Do your classes have [] surrounding them?");
       }
       boolean exclude = false;
