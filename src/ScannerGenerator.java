@@ -42,7 +42,12 @@ public class ScannerGenerator {
         nfas.put(entry.getKey(), new NFA(entry.getValue()));
       }
 
-
+      for (String regex : spec) {
+        String[] temp = regex.split(" ", 2);
+        // dirty i know. This gets the identifier out of the line
+        // and sends the regex to the rd method
+        nfas.put(temp[0], recursiveDescent(temp[1], nfas));
+      }
 
       System.out.println(nfas);
 
@@ -60,7 +65,12 @@ public class ScannerGenerator {
     }
   }
 
-  public NFA recursiveDescent(String line, Map<String, NFA> nfas) {
-    return null;
+  // ($DIGIT|$LOWER)+ $THING* a* b
+  private static NFA recursiveDescent(String line, Map<String, NFA> nfas) {
+    String[] parts = line.split(" ", 2);
+    if (parts.length > 1) {
+      //return NFA
+    }
+
   }
 }
