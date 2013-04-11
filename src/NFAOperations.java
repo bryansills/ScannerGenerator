@@ -9,9 +9,9 @@ public class NFAOperations {
 	/**
 	 * Concatenate two NFAs together.
 	 * Ex. ($DIGIT $LOWER)
-	 */ 
+	 */
 	public static NFA concat(NFA nfa_a, NFA nfa_b) {
-	  	// set accept states isAccept to false 
+	  	// set accept states isAccept to false
 	  	// and set next states to start state of b
 	  	List<NFAState> acceptStates = nfa_a.findAcceptStates();
 
@@ -42,7 +42,7 @@ public class NFAOperations {
   		nfa_a.getStartState().setTransition(null);
   		nfa_b.getStartState().setTransition(null);
   		newNFA.getStartState().addNext(nfa_a.getStartState())
-                              .addNext(nfa_b.getStartState());
+                            .addNext(nfa_b.getStartState());
 
   		//create final state
   		NFAState finalState = NFAState.builder()
