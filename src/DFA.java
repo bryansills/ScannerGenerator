@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 public class DFA {
 	private DFAState start;
@@ -50,6 +52,10 @@ public class DFA {
 		for(NFAState nfaState: nextStates) {
 			if(nfaState.getTransition() == null) {
 				curr.addToIdList(nfaStates.indexOf(nfaState)); // test this hard
+				
+				if(nfaState.isAccept()) {
+					curr.setAccept(true);
+				}
 			}
 			else {
 				if(!transitionsSeen.contains(nfaState.getTransition())) {
@@ -57,12 +63,20 @@ public class DFA {
 					transitionsSeen.add(nfaState.getTransition());
 					curr = curr.next(transitionsSeen.get(transitionsSeen.size() - 1));
 					curr.getIdList().add(nfaStates.indexOf(nfaState));
+					
+					if(nfaState.isAccept()) {
+						curr.setAccept(true);
+					}
 				}
 				else {
 					for(DFAState state : this.getAllStates()) {
 						if(state.next(nfaState.getTransition()).getTransition() == nfaState.getTransition()) {
 							curr = state.next(nfaState.getTransition());
 							curr.addToIdList(nfaStates.indexOf(focus));
+							
+							if(focus.isAccept()) {
+								curr.setAccept(true);
+							}
 						}
 					}
 					
@@ -76,9 +90,27 @@ public class DFA {
 	}
 	
 	public List<DFAState> getAllStates() {
-		List<DFAState> states = new ArrayList<DFAState>();
+		List<DFAState> allStates = new ArrayList<DFAState>();
 		
-		return states;
+		Set<DFAState> discovered = new HashSet<DFAState>();
+		Stack<DFAState> nextStatesToExplore = new Stack<DFAState>();
+		DFAState temp;
+		
+		while(!nextStatesToExplore.empty()) {
+			temp = nextStatesToExplore.pop();
+			allStates.add(temp);
+			
+			for(DFAState nextState : temp.getNextStates()) {
+				if((!nextStatesToExplore.contains(nextState))
+						&& (!discovered.contains(nextState))) {
+					nextStatesToExplore.push(nextState);
+				}
+			}
+			
+			discovered.add(temp);
+		}
+		
+		return allStates;
 	}
 
 }
