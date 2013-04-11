@@ -22,11 +22,9 @@ public class NFA {
         .setAccept(true)
         .setTransition(chars)
         .build();
-    List<NFAState> states = new ArrayList<NFAState>();
-    states.add(acceptState);
     this.start = NFAState.builder()
         .setTransition(null) // empty transition.
-        .setNextStates(states)
+        .addNextState(acceptState)
         .build();
   }
 
