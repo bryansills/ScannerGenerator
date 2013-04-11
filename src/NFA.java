@@ -19,12 +19,14 @@ public class NFA {
    * @param chars the accepted characters from a char class
    */
   public NFA(Set<Character> chars) {
-    this.chars = chars;
-    NFAState acceptState = new NFAState();
-    acceptState.setTransition(chars);
-    List<NFAState> states = new ArrayList<NFAState>();
-    states.add(acceptState);
-    this.start = new NFAState(null, states); // create the start state
+    NFAState acceptState = NFAState.builder()
+        .setAccept(true)
+        .setTransition(chars)
+        .build();
+    this.start = NFAState.builder()
+        .setTransition(null) // empty transition.
+        .addNextState(acceptState)
+        .build();
   }
 
   /**
