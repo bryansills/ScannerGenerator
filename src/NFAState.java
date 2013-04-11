@@ -55,6 +55,17 @@ public class NFAState {
     return states;
   }
 
+
+  public boolean accepts(String str) {
+    // TODO(bryansills):FINISH THIS
+    if (str.length() == 0 && this.isAccept()) {
+      return true;
+    }
+    Character next = str.charAt(0);
+
+    return false;
+  }
+
   /**
    * Get the characters this state will accept
    * @return
@@ -63,8 +74,9 @@ public class NFAState {
     return transition;
   }
 
-  public void setTransition(Set<Character> transition) {
+  public NFAState setTransition(Set<Character> transition) {
       this.transition = transition;
+      return this;
   }
 
   public boolean isAccept() {
@@ -85,20 +97,21 @@ public class NFAState {
    * Is this an accept state or not?
    * @param b
    */
-  public void setAccept(boolean b) {
+  public NFAState setAccept(boolean b) {
     accept = b;
+    return this;
   }
 
   /**
    * Adds a state that the current state points to.
    * @param state
    */
-  public void addNext(NFAState state) {
+  public NFAState addNext(NFAState state) {
     nextStates.add(state);
+    return this;
   }
 
   public List<NFAState> getNextStates() {
     return nextStates;
   }
-
 }
