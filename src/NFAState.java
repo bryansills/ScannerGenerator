@@ -82,6 +82,7 @@ public class NFAState {
       return true;
     }
 
+    boolean anyTrue = false;
     Character nextChar = null;
     List<NFAState> nStates;
     if (!(str == null) && str.length() >= 1) {
@@ -93,7 +94,7 @@ public class NFAState {
       //if there are states that accept the next character, recursively call this method
       //on the str, minus the first character
       for (NFAState state : nStates) {
-        return state.accepts(str.substring(1));
+        anyTrue = anyTrue || state.accepts(str.substring(1));
       }
     }
 
@@ -103,11 +104,11 @@ public class NFAState {
     nStates = next(nextChar);
 
     for (NFAState state : nStates) {
-      return state.accepts(str);
+      anyTrue = anyTrue || state.accepts(str);
     }
 
     //string might not be accepted by the NFA. go up the recursive stack
-    return false;
+    return anyTrue;
   }
 
   /**
