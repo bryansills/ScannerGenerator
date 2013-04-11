@@ -78,22 +78,23 @@ public class NFAState {
   public boolean accepts(String str) {
     //if we have gone through the entire string and the current state is an accept
     //state, then the NFA accepts the string
-    if (str.length() == 0 && this.isAccept()) {
+    if (this.isAccept() && (str == null || str.length() == 0)) {
       return true;
     }
 
     Character nextChar = null;
-    if (str.length() >= 1) {
+    List<NFAState> nStates;
+    if (!(str == null) && str.length() >= 1) {
       //else, get the next character in the string
       nextChar = str.charAt(0);
-    }
 
-    List<NFAState> nStates = next(nextChar);
+      nStates = next(nextChar);
 
-    //if there are states that accept the next character, recursively call this method
-    //on the str, minus the first character
-    for (NFAState state : nStates) {
+      //if there are states that accept the next character, recursively call this method
+      //on the str, minus the first character
+      for (NFAState state : nStates) {
         return state.accepts(str.substring(1));
+      }
     }
 
     //if there are no states that accept the next character, try using an empty string

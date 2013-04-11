@@ -1,7 +1,5 @@
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A class to hold operations performed on NFAs including concat, union, star, and plus.
@@ -31,11 +29,13 @@ public class NFAOperations {
   	 * Ex. ($DIGIT | $LOWER)
   	 */
   	public static NFA union(NFA nfa_a, NFA nfa_b) {
-  		Set<Character> newSet = new HashSet<Character>(nfa_a.getChars());
-  		newSet.addAll(nfa_b.getChars());
+//  		Set<Character> newSet = new HashSet<Character>();
+//
+//        nfa_a.getStartState().getNextStates().getTransition();
+//  		newSet.addAll(nfa_b.getStartState().getNextStates().getTransition());
 
   		//create new nfa to hold unioned nfas
-  		NFA newNFA = new NFA(newSet);
+  		NFA newNFA = new NFA(null);
   		List<NFAState> nextStates = Arrays.asList(nfa_a.getStartState(), nfa_b.getStartState());
 
   		//set transition into a and b to null for empty string
