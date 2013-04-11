@@ -118,9 +118,8 @@ public class NFAState {
     return transition;
   }
 
-  public NFAState setTransition(Set<Character> transition) {
+  public void setTransition(Set<Character> transition) {
       this.transition = transition;
-      return this;
   }
 
   public boolean isAccept() {
@@ -141,18 +140,16 @@ public class NFAState {
    * Is this an accept state or not?
    * @param b
    */
-  public NFAState setAccept(boolean b) {
+  public void setAccept(boolean b) {
     accept = b;
-    return this;
   }
 
   /**
    * Adds a state that the current state points to.
    * @param state
    */
-  public NFAState addNext(NFAState state) {
+  public void addNext(NFAState state) {
     nextStates.add(state);
-    return this;
   }
 
   public List<NFAState> getNextStates() {
