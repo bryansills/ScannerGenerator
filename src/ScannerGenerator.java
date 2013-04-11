@@ -68,9 +68,13 @@ public class ScannerGenerator {
   // ($DIGIT|$LOWER)+ $THING* a* b
   private static NFA recursiveDescent(String line, Map<String, NFA> nfas) {
     String[] parts = line.split(" ", 2);
+    // handle concat
     if (parts.length > 1) {
-      //return NFA
+      //return NFAOperations.concat(recursiveDescent(parts[0], nfas), recursiveDescent(parts[1], nfas));
     }
+
+    return null;
+
 
   }
 }
