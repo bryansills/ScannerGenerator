@@ -60,11 +60,16 @@ public class NFA {
   	return acceptStates;
   }
 
+  public boolean accepts(String str) {
+      return start.accepts(str);
+  }
+
   public NFAState getStartState() {
   	return start;
   }
 
-  public void setStartState(NFAState start) {
+  public NFA setStartState(NFAState start) {
   	this.start = start;
+    return this;
   }
 }
