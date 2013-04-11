@@ -41,10 +41,14 @@ public class NFAOperations {
   		//set transition into a and b to null for empty string
   		nfa_a.getStartState().setTransition(null);
   		nfa_b.getStartState().setTransition(null);
-  		newNFA.setStartState(new NFAState(false, new HashSet<Character>(), nextStates));
+  		newNFA.getStartState().addNext(nfa_a.getStartState())
+                              .addNext(nfa_b.getStartState());
 
   		//create final state
-  		NFAState finalState = new NFAState(true, null, null);
+  		NFAState finalState = NFAState.builder()
+                .setAccept(true)
+                .setTransition(null)
+                .build();
   		List<NFAState> acceptStates = nfa_a.findAcceptStates();
   		acceptStates.addAll(nfa_b.findAcceptStates());
 
