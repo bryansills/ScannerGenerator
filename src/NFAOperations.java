@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,14 +28,9 @@ public class NFAOperations {
   	 * Ex. ($DIGIT | $LOWER)
   	 */
   	public static NFA union(NFA nfa_a, NFA nfa_b) {
-//  		Set<Character> newSet = new HashSet<Character>();
-//
-//        nfa_a.getStartState().getNextStates().getTransition();
-//  		newSet.addAll(nfa_b.getStartState().getNextStates().getTransition());
 
   		//create new nfa to hold unioned nfas
-  		NFA newNFA = new NFA(null);
-  		List<NFAState> nextStates = Arrays.asList(nfa_a.getStartState(), nfa_b.getStartState());
+  		NFA newNFA = new NFA();
 
   		//set transition into a and b to null for empty string
   		nfa_a.getStartState().setTransition(null);
