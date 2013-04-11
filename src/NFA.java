@@ -12,7 +12,6 @@ import java.util.Stack;
  */
 public class NFA {
   private NFAState start;
-    private Set<Character> chars;
 
   /**
    * Creates a primitive nfa based on a char class
@@ -73,13 +72,4 @@ public class NFA {
   	this.start = start;
     return this;
   }
-
-    public Set<Character> getChars() {
-        return chars;
-    }
-
-    public NFA setChars(Set<Character> chars) {
-        this.chars = chars;
-        return this;
-    }
 }
