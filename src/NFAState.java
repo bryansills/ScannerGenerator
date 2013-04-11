@@ -1,43 +1,62 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
 public class NFAState {
+
+  public static class Builder {
+
+    private Set<Character> transition;
+    private List<NFAState> nextStates;
+    private boolean accept;
+
+    public Builder() {
+      nextStates = new ArrayList<NFAState>();
+    }
+
+    /**
+     * null means that it accepts epsilons
+     * @param transition
+     */
+    public Builder setTransition(Set<Character> transition) {
+      this.transition = transition;
+      return this;
+    }
+
+    public Builder setAccept(boolean accept) {
+      this.accept = accept;
+      return this;
+    }
+
+    public Builder setNextStates(List<NFAState> nextStates) {
+      this.nextStates = nextStates;
+      return this;
+    }
+
+    public Builder addNextState(NFAState s) {
+      nextStates.add(s);
+      return this;
+    }
+
+    public NFAState build() {
+      return new NFAState(this);
+    }
+
+  }
+
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
 
-  public NFAState(boolean accept, Set<Character> transition, List<NFAState> nextStates) {
-    this.accept = accept;
-    this.transition = transition;
-    this.nextStates = nextStates;
-
+  private NFAState(Builder b) {
+    this.accept = b.accept;
+    this.transition = b.transition;
+    this.nextStates = b.nextStates;
   }
 
-  private NFAState(boolean accept, Set<Character> transition) {
-    this(accept, transition, new ArrayList<NFAState>());
-  }
-
-  /**
-   * If you make a state without a transition. that defaults to an accept state.
-   */
-  public NFAState() {
-    this(true, new HashSet<Character>());
-  }
-
-  /**
-   * Creates a state and sets its transition cost (based on char class)
-   * null means that it accepts empty
-   * @param transition
-   */
-  public NFAState(Set<Character> transition) {
-    this(false, transition);
-  }
-
-  public NFAState(Set<Character> transition, List<NFAState> nextStates) {
-    this(false, transition, nextStates);
+  public static Builder builder() {
+    return new Builder();
   }
 
   /**
@@ -53,6 +72,43 @@ public class NFAState {
       }
     }
     return states;
+  }
+
+
+  public boolean accepts(String str) {
+    //if we have gone through the entire string and the current state is an accept
+    //state, then the NFA accepts the string
+    if (this.isAccept() && (str == null || str.length() == 0)) {
+      return true;
+    }
+
+    boolean anyTrue = false;
+    Character nextChar = null;
+    List<NFAState> nStates;
+    if (!(str == null) && str.length() >= 1) {
+      //else, get the next character in the string
+      nextChar = str.charAt(0);
+
+      nStates = next(nextChar);
+
+      //if there are states that accept the next character, recursively call this method
+      //on the str, minus the first character
+      for (NFAState state : nStates) {
+        anyTrue = anyTrue || state.accepts(str.substring(1));
+      }
+    }
+
+    //if there are no states that accept the next character, try using an empty string
+    //transition with the full string
+    nextChar = null;
+    nStates = next(nextChar);
+
+    for (NFAState state : nStates) {
+      anyTrue = anyTrue || state.accepts(str);
+    }
+
+    //string might not be accepted by the NFA. go up the recursive stack
+    return anyTrue;
   }
 
   /**
@@ -85,20 +141,22 @@ public class NFAState {
    * Is this an accept state or not?
    * @param b
    */
-  public void setAccept(boolean b) {
+  public NFAState setAccept(boolean b) {
     accept = b;
+    return this;
   }
 
   /**
    * Adds a state that the current state points to.
    * @param state
+   * @return
    */
-  public void addNext(NFAState state) {
+  public NFAState addNext(NFAState state) {
     nextStates.add(state);
+    return this;
   }
 
   public List<NFAState> getNextStates() {
     return nextStates;
   }
-
 }
