@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -6,13 +7,17 @@ public class DFAState {
 	private Set<Character> transition;
 	private boolean accept;
 	
-	public DFAState(Set<Character> aTransition, boolean aAccept) {
-		transition = aTransition;
+	public DFAState() {
+		this(true, new HashSet<Character>());
+	}
+	
+	public DFAState(boolean aAccept, Set<Character> aTransition) {
 		accept = aAccept;
+		transition = aTransition;
 	}
 	
 	public DFAState next(Character c) {
-		DFAState nextState;
+		DFAState nextState = new DFAState();
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsChar(c)) {
@@ -33,6 +38,20 @@ public class DFAState {
 		return this;
 	}
 	
+	public boolean acceptsChar(Character c) {
+		return transition == null && c == null
+			|| transition != null && transition.contains(c);
+	}
 	
-
+	public void setAccept(boolean isAccept) {
+		accept = isAccept;
+	}
+	
+	public void addNext(DFAState state) {
+		nextStates.add(state);
+	}
+	
+	public List<DFAState> getNextStates() {
+		return nextStates;
+	}
 }
