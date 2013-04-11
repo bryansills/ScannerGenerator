@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -20,29 +22,31 @@ public class ScannerGenerator {
 
     try {
       BufferedReader in = new BufferedReader(new FileReader(new File(args[0])));
-      StringBuffer classSpec = new StringBuffer();
-      StringBuffer spec = new StringBuffer();
+      List<String> classSpec = new ArrayList<String>();
+      List<String> spec = new ArrayList<String>();
       String line;
       while ((line = in.readLine()) != null && !line.equals("")) {
-        classSpec.append(line);
-        classSpec.append('\n');
+        classSpec.add(line);
       }
 
       while ((line = in.readLine()) != null) {
-        spec.append(line);
-        spec.append('\n');
+        spec.add(line);
       }
-
-      Map<String, Set<Character>> classes = CharClasses.buildMapFromSpec(classSpec.toString());
-
-      List<NFA> classNfa = new ArrayList<NFA>();
-      for (String cls : classes.keySet()) {
-        System.out.println(cls);
-        //classNFA.add()
-      }
-
 
       in.close();
+
+      Map<String, Set<Character>> classes = CharClasses.buildMapFromSpec(classSpec);
+
+      Map<String, NFA> nfas = new HashMap<String, NFA>();
+      for (Entry<String, Set<Character>> entry : classes.entrySet()) {
+        nfas.put(entry.getKey(), new NFA(entry.getValue()));
+      }
+
+
+
+      System.out.println(nfas);
+
+
 
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
@@ -56,7 +60,7 @@ public class ScannerGenerator {
     }
   }
 
-  public NFA recursiveDescent() {
+  public NFA recursiveDescent(String line, Map<String, NFA> nfas) {
     return null;
   }
 }
