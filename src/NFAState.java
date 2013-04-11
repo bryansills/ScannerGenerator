@@ -140,16 +140,19 @@ public class NFAState {
    * Is this an accept state or not?
    * @param b
    */
-  public void setAccept(boolean b) {
+  public NFAState setAccept(boolean b) {
     accept = b;
+    return this;
   }
 
   /**
    * Adds a state that the current state points to.
    * @param state
+   * @return
    */
-  public void addNext(NFAState state) {
+  public NFAState addNext(NFAState state) {
     nextStates.add(state);
+    return this;
   }
 
   public List<NFAState> getNextStates() {
