@@ -6,9 +6,14 @@ public class DFAState {
 	private List<DFAState> nextStates;
 	private Set<Character> transition;
 	private boolean accept;
+	private List<Integer> idList;
 	
 	public DFAState() {
 		this(true, new HashSet<Character>());
+	}
+	
+	public DFAState(int startId) {
+		this.idList.add(startId);
 	}
 	
 	public DFAState(boolean aAccept, Set<Character> aTransition) {
@@ -21,6 +26,18 @@ public class DFAState {
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsChar(c)) {
+				nextState = d;
+			}
+		}
+		
+		return nextState;
+	}
+	
+	public DFAState next(Set<Character> charSet) {
+		DFAState nextState = new DFAState();
+		
+		for(DFAState d : nextStates) {
+			if(d.acceptsCharSet(charSet)) {
 				nextState = d;
 			}
 		}
@@ -43,6 +60,11 @@ public class DFAState {
 			|| transition != null && transition.contains(c);
 	}
 	
+	public boolean acceptsCharSet(Set<Character> charSet) {
+		return transition == null && charSet == null
+			|| transition != null && transition.contains(charSet);	// test
+	}
+	
 	public void setAccept(boolean isAccept) {
 		accept = isAccept;
 	}
@@ -53,5 +75,13 @@ public class DFAState {
 	
 	public List<DFAState> getNextStates() {
 		return nextStates;
+	}
+	
+	public List<Integer> getIdList() {
+		return idList;
+	}
+	
+	public void addToIdList(int newId) {
+		idList.add(newId);
 	}
 }

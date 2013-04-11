@@ -64,4 +64,12 @@ public class NFA {
   public void setStartState(NFAState start) {
   	this.start = start;
   }
+  
+  public List<NFAState> getAllStates() {
+	  List<NFAState> allStates = new ArrayList<NFAState>();
+	  
+	  // iterate through and construct a list of all NFAStates
+	  
+	  return allStates;
+  }
 }
