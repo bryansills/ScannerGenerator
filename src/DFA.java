@@ -107,20 +107,14 @@ public class DFA {
 				 * If you haven't seen that transition yet, add it to the DFA
 				 */
 				if(!transitionsSeen.contains(nfaState.getTransition())) {
-					//System.out.println(nfaState.getTransition());
-					//System.out.println(curr);
 					curr.addNext(DFAState.builder()
 							.setAccept(false)
 							.setTransition(nfaState.getTransition())
 							.build());
-					//System.out.println("wef: " + this.getAllStates().size());
 					transitionsSeen.add(nfaState.getTransition());
 					curr = curr.next(nfaState.getTransition());
-					//System.out.println(curr);
 
-					//System.out.println(nfaState.getTransition());
 					curr.addToIdList(nfaStates.indexOf(nfaState));
-					//System.out.println(curr.getIdList().size());
 					
 					if(nfaState.isAccept()) {
 						curr.setAccept(true);
@@ -135,7 +129,6 @@ public class DFA {
 					 * transition modified in your DFA
 					 */
 					for(DFAState state : this.getAllStates()) {
-						//System.out.println(this.getAllStates().size());
 						if(state.getTransition() == nfaState.getTransition()) {
 							curr = state;
 							curr.addToIdList(nfaStates.indexOf(focus));
@@ -151,6 +144,10 @@ public class DFA {
 				}
 			}
 			for(NFAState nextState : focus.getNextStates()) {
+				/*if(!curr.getIdList().contains(nfaStates.indexOf(focus))) {
+					curr.addToIdList(nfaStates.indexOf(focus));
+				}*/
+				
 				focus = nextState;
 				
 				/*for(NFAState state : visited) {
