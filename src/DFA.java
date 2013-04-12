@@ -42,9 +42,11 @@ public class DFA {
 		nfaStates = nfa.getAllStates();
 		transitionsSeen = new ArrayList<Set<Character>>();
 		visited = new ArrayList<NFAState>();
-		curr = new DFAState();  // necessary?
+		curr = DFAState.builder().build();  // necessary?
 		
-		start = new DFAState(nfaStates.indexOf(focus));
+		start = DFAState.builder()
+				.setFirstId(nfaStates.indexOf(focus))
+				.build();
 		this.setStartState(start);
 		curr = start;
 		
@@ -91,7 +93,10 @@ public class DFA {
 				 */
 				if(!transitionsSeen.contains(nfaState.getTransition())) {
 					System.out.println(nfaState.getTransition());
-					curr.addNext(new DFAState(false, nfaState.getTransition()));
+					curr.addNext(DFAState.builder()
+							.setAccept(false)
+							.setTransition(nfaState.getTransition())
+							.build());
 					System.out.println("wef: " + this.getAllStates().size());
 					transitionsSeen.add(nfaState.getTransition());
 					curr = curr.next(nfaState.getTransition());

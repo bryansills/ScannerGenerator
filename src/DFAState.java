@@ -4,15 +4,78 @@ import java.util.List;
 import java.util.Set;
 
 public class DFAState {
-	private List<DFAState> nextStates;
+	
+	public static class Builder {
+		
+		private Set<Character> transition;
+		private List<DFAState> nextStates;
+		private boolean accept;
+		private boolean isStart;
+		private List<Integer> idList;
+		
+		public Builder() {
+			nextStates = new ArrayList<DFAState>();
+		}
+		
+		public Builder setTransition(Set<Character> transition) {
+			this.transition = transition;
+			return this;
+		}
+		
+		public Builder setAccept(boolean accept) {
+			this.accept = accept;
+			return this;
+		}
+		
+		public Builder setIsStart(boolean start) {
+			this.isStart = start;
+			return this;
+		}
+		
+		public Builder setIdList(List<Integer> idList) {
+			this.idList = idList;
+			return this;
+		}
+		
+		public Builder setNextStates(List<DFAState> nextStates) {
+			this.nextStates = nextStates;
+			return this;
+		}
+		
+		public Builder addNextState(DFAState s) {
+			nextStates.add(s);
+			return this;
+		}
+		
+		public Builder setFirstId(int startId) {
+			this.idList.add(startId);
+			return this;
+		}
+		
+		public DFAState build() {
+			return new DFAState(this);
+		}
+	}
+	
 	private Set<Character> transition;
+	private List<DFAState> nextStates;
 	private boolean accept;
 	private boolean isStart;
 	private List<Integer> idList;
 	
-	//TODO: Builderize
+	private DFAState(Builder b) {
+		this.idList = b.idList;
+		this.isStart = b.isStart;
+		this.accept = b.accept;
+		this.transition = b.transition;
+		this.nextStates = b.nextStates;
+	}
 	
-	public DFAState() {
+	public static Builder builder() {
+		return new Builder();
+	}
+	
+	/*public DFAState() {
 		this(true, new HashSet<Character>());
 	}
 	
@@ -28,9 +91,9 @@ public class DFAState {
 		idList = new ArrayList<Integer>();
 		nextStates = new ArrayList<DFAState>();
 	}
-	
+	*/
 	public DFAState next(Character c) {
-		DFAState nextState = new DFAState();
+		DFAState nextState = DFAState.builder().build();
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsChar(c)) {
@@ -42,7 +105,7 @@ public class DFAState {
 	}
 	
 	public DFAState next(Set<Character> charSet) {
-		DFAState nextState = new DFAState();
+		DFAState nextState = DFAState.builder().build();
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsCharSet(charSet)) {
