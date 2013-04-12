@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -65,11 +67,69 @@ public class NFA {
 
   	return acceptStates;
   }
-
   public NFA copy() {
     NFA copy = new NFA();
-    copy.setStartState(start.copy());
+    Map<NFAState, NFAState> oldToNew = new HashMap<NFAState, NFAState>();
+    List<NFAState> oldStates = getAllStates();
+
+    //create a map linking all the old states to the new copies
+    for (NFAState oState : oldStates) {
+        NFAState nState = oState.copy();
+        oldToNew.put(oState, nState);
+    }
+
+    //below is a modified dfs
+    Set<NFAState> discovered = new HashSet<NFAState>();
+    Stack<NFAState> nextStatesToExplore = new Stack<NFAState>();
+    NFAState old, newState;
+
+    nextStatesToExplore.push(start);
+
+    //traverse the old nfa
+    while(!nextStatesToExplore.empty()) {
+        old = nextStatesToExplore.pop();
+        newState = oldToNew.get(old);
+
+        for(NFAState nextState : old.getNextStates()) {
+            //add all the next new states based on the old next states
+            newState.addNext(oldToNew.get(nextState));
+
+            if((!nextStatesToExplore.contains(nextState))
+                    && (!discovered.contains(nextState))) {
+                nextStatesToExplore.push(nextState);
+            }
+        }
+        discovered.add(old);
+    }
+
+    copy.setStartState(oldToNew.get(start));
     return copy;
+  }
+
+  public List<NFAState> getAllStates() {
+    List<NFAState> allStates = new ArrayList<NFAState>();
+
+    Set<NFAState> discovered = new HashSet<NFAState>();
+    Stack<NFAState> nextStatesToExplore = new Stack<NFAState>();
+    NFAState temp;
+
+    nextStatesToExplore.push(start);
+
+    while(!nextStatesToExplore.empty()) {
+        temp = nextStatesToExplore.pop();
+        allStates.add(temp);
+
+        for(NFAState nextState : temp.getNextStates()) {
+            if((!nextStatesToExplore.contains(nextState))
+                    && (!discovered.contains(nextState))) {
+                nextStatesToExplore.push(nextState);
+            }
+        }
+
+        discovered.add(temp);
+    }
+
+    return allStates;
   }
   public boolean accepts(String str) {
       return start.accepts(str);
