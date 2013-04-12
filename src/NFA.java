@@ -15,6 +15,7 @@ public class NFA {
 
   public NFA() {
     this.start = NFAState.builder()
+    	.setIsStart(true)
         .build();
   }
 

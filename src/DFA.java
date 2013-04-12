@@ -45,7 +45,7 @@ public class DFA {
 		//System.out.println(nfaStates.size());
 		transitionsSeen = new ArrayList<Set<Character>>();
 		visited = new ArrayList<NFAState>();
-		forkHack = NFAState.builder().build();
+		//forkHack = NFAState.builder().build();
 		//curr = DFAState.builder().build();  // necessary?
 		
 		start = DFAState.builder()
@@ -81,9 +81,9 @@ public class DFA {
 		}
 		
 		List<NFAState> nextStates = focus.getNextStates();
-		if(nextStates.size() > 1) {
+		/*if(nextStates.size() > 1) {
 			forkHack = focus;
-		}
+		}*/
 
 		for(NFAState nfaState: nextStates) {
 			
@@ -108,7 +108,7 @@ public class DFA {
 				 */
 				if(!transitionsSeen.contains(nfaState.getTransition())) {
 					//System.out.println(nfaState.getTransition());
-					System.out.println(curr);
+					//System.out.println(curr);
 					curr.addNext(DFAState.builder()
 							.setAccept(false)
 							.setTransition(nfaState.getTransition())
@@ -116,7 +116,7 @@ public class DFA {
 					//System.out.println("wef: " + this.getAllStates().size());
 					transitionsSeen.add(nfaState.getTransition());
 					curr = curr.next(nfaState.getTransition());
-					System.out.println(curr);
+					//System.out.println(curr);
 
 					//System.out.println(nfaState.getTransition());
 					curr.addToIdList(nfaStates.indexOf(nfaState));
@@ -150,19 +150,18 @@ public class DFA {
 					}
 				}
 			}
-		}
-		
-		for(NFAState nextState : focus.getNextStates()) {
-			focus = nextState;
-			
-			/*for(NFAState state : visited) {
-				System.out.print(visited.get(visited.indexOf(state)));
+			for(NFAState nextState : focus.getNextStates()) {
+				focus = nextState;
+				
+				/*for(NFAState state : visited) {
+					System.out.print(visited.get(visited.indexOf(state)));
+				}
+				System.out.println();*/
+				
+				explore(focus);
 			}
-			System.out.println();*/
-			
-			explore(focus);
 		}
-		focus = forkHack;
+		//focus = forkHack;
 		return;
 	}
 	
@@ -191,7 +190,7 @@ public class DFA {
 			discovered.add(temp);
 		}
 		
-		System.out.println(allStates.size());
+		//System.out.println(allStates.size());
 		return allStates;
 	}
 

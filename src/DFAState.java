@@ -77,7 +77,7 @@ public class DFAState {
 	}
 	
 	public DFAState next(Character c) {
-		DFAState nextState = DFAState.builder().build();
+		DFAState nextState = null;
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsChar(c)) {
@@ -89,7 +89,7 @@ public class DFAState {
 	}
 	
 	public DFAState next(Set<Character> charSet) {
-		DFAState nextState = DFAState.builder().build();
+		DFAState nextState = null;
 		
 		for(DFAState d : nextStates) {
 			if(d.acceptsCharSet(charSet)) {
@@ -117,7 +117,7 @@ public class DFAState {
 	
 	public boolean acceptsCharSet(Set<Character> charSet) {
 		return transition == null && charSet == null
-			|| transition != null && transition.contains(charSet);	// test
+			|| transition != null && transition.containsAll(charSet);	// test
 	}
 	
 	public boolean getAccept() {
