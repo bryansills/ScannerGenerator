@@ -60,7 +60,7 @@ public class NFAState {
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
-    this.name = name;
+    this.name = b.name;
   }
 
   public static Builder builder() {
@@ -197,6 +197,7 @@ public class NFAState {
   public NFAState copy() {
     return NFAState.builder()
         .setAccept(accept)
+        .setName(name)
         .setTransition(transition).build();
   }
 }

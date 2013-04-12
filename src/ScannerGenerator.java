@@ -43,13 +43,18 @@ public class ScannerGenerator {
       for (Entry<String, Set<Character>> entry : classes.entrySet()) {
         nfas.put(entry.getKey(), new NFA(entry.getValue()));
       }
-      Map<String, NFA> regMap = new HashMap<String, NFA>();
 
+      NFA reg = null;
       for (String regex : spec) {
         String[] temp = regex.split(" ", 2);
-        // dirty i know. This gets the identifier out of the line
-        // and sends the regex to the rd method
-        regMap.put(temp[0], rd(temp[1], nfas));
+        NFA tempNFA = rd(temp[1], nfas);
+        tempNFA.getStartState().setName(temp[0]);
+
+        if (reg == null) {
+            reg = tempNFA;
+        } else {
+            reg = NFAOperations.union(reg, tempNFA);
+        }
       }
 
 
@@ -66,26 +71,21 @@ public class ScannerGenerator {
         // start by splitting by space
         String[] toks = input.split(" ");
         for (String t : toks) {
-          boolean accepted = false;
-          for (Entry<String, NFA> nfa : regMap.entrySet()) {
-            if (nfa.getValue().accepts(t) != null) {
-              accepted = true;
-              System.out.println(nfa.getKey().substring(1) + " " + t);
-              break;
+          String classification = reg.accepts(t);
+          if (reg.accepts(t) != null) {
+            System.out.println(classification + " " + t);
+            break;
             }
-          }
-          if (!accepted) {
+          else {
             while (t.length() > 0) {
               for (int i = t.length(); i >= 1; i--) {
-                for (Entry<String, NFA> nfa : regMap.entrySet()) {
-                  String sub = t.substring(0, i);
-                  if (nfa.getValue().accepts(sub) != null) {
-                    System.out.println(nfa.getKey().substring(1) + " " + sub);
-                    t = t.substring(i);
-                    i = t.length();
-                  }
+                String sub = t.substring(0, i);
+                String subClassif = reg.accepts(sub);
+                if (subClassif != null) {
+                  System.out.println(subClassif + " " + sub);
+                  t = t.substring(i);
+                  i = t.length();
                 }
-
               }
 
             }
