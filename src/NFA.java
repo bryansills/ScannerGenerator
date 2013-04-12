@@ -66,23 +66,8 @@ public class NFA {
 
   public NFA copy() {
     NFA copy = new NFA();
-    copy.setStartState(copyState(start));
+    copy.setStartState(start.copy());
     return copy;
-  }
-  public NFAState copyState(NFAState s) {
-    if (s.getNextStates().size() > 0) {
-      List<NFAState> copiedNext = new ArrayList<NFAState>();
-      for (NFAState old : s.getNextStates()) {
-        copiedNext.add(copyState(old));
-      }
-      return NFAState.builder()
-          .setAccept(s.isAccept())
-          .setNextStates(copiedNext)
-          .setTransition(s.getTransition())
-          .build();
-    }
-    return s;
-
   }
   public boolean accepts(String str) {
       return start.accepts(str);

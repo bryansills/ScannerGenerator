@@ -10,7 +10,9 @@ public class NFAOperations {
 	 * Concatenate two NFAs together.
 	 * Ex. ($DIGIT $LOWER)
 	 */
-	public static NFA concat(NFA nfa_a, NFA nfa_b) {
+	public static NFA concat(NFA a, NFA b) {
+  	  NFA nfa_a = a.copy();
+  	  NFA nfa_b = b.copy();
 	  	// set accept states isAccept to false
 	  	// and set next states to start state of b
 	  	List<NFAState> acceptStates = nfa_a.findAcceptStates();
@@ -28,7 +30,9 @@ public class NFAOperations {
   	 * Unionize two NFAs.
   	 * Ex. ($DIGIT | $LOWER)
   	 */
-  	public static NFA union(NFA nfa_a, NFA nfa_b) {
+  	public static NFA union(NFA a, NFA b) {
+  	    NFA nfa_a = a.copy();
+  	    NFA nfa_b = b.copy();
 //  		Set<Character> newSet = new HashSet<Character>();
 //
 //        nfa_a.getStartState().getNextStates().getTransition();
@@ -65,7 +69,8 @@ public class NFAOperations {
   	 * Star indicates that an NFA should be repeated 0 or more times.
   	 * Ex. ($DIGIT*)
   	 */
-  	public static NFA star(NFA nfa_a) {
+  	public static NFA star(NFA a) {
+  	  NFA nfa_a = a.copy();
   		List<NFAState> acceptStates = nfa_a.findAcceptStates();
 
   		for(NFAState acceptState : acceptStates) {
@@ -76,7 +81,7 @@ public class NFAOperations {
   		nfa_a.getStartState().setAccept(true);
   		nfa_a.getStartState().setTransition(null);
 
-        return nfa_a;
+      return nfa_a;
   	}
 
   	/**
@@ -84,7 +89,7 @@ public class NFAOperations {
   	 * Ex. ($DIGIT+)
   	 */
   	public static NFA plus(NFA nfa_a) {
-  		return union(nfa_a, star(nfa_a));
+  		return concat(nfa_a, star(nfa_a));
   	}
 
 }

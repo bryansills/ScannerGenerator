@@ -51,6 +51,7 @@ public class ScannerGenerator {
         nfas.put(temp[0], rd(temp[1], nfas));
       }
 
+
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
       e.printStackTrace();

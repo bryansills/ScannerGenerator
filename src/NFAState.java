@@ -158,4 +158,21 @@ public class NFAState {
   public List<NFAState> getNextStates() {
     return nextStates;
   }
+
+  public NFAState copy() {
+    if (nextStates.size() > 0) {
+      List<NFAState> copiedNext = new ArrayList<NFAState>();
+      for (NFAState old : nextStates) {
+        copiedNext.add(old.copy());
+      }
+      return NFAState.builder()
+          .setAccept(accept)
+          .setNextStates(copiedNext)
+          .setTransition(transition)
+          .build();
+    }
+    return NFAState.builder()
+        .setAccept(accept)
+        .setTransition(transition).build();
+  }
 }
