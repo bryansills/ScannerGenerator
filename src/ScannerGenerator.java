@@ -51,10 +51,6 @@ public class ScannerGenerator {
         nfas.put(temp[0], rd(temp[1], nfas));
       }
 
-      System.out.println(nfas);
-
-
-
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
       e.printStackTrace();
@@ -70,11 +66,9 @@ public class ScannerGenerator {
   // ($DIGIT|$LOWER)+ $THING* a* b
   // (($DIGIT|$LOWER) ($ASSDF))+
   private static NFA rd(String line, Map<String, NFA> nfas) {
-    System.out.println("Looking at " + line);
     String[] parts = line.split(" ", 2);
     // handle concat
     if (wellFormedBraces(parts[0]) && parts.length > 1) {
-      System.out.printf("CONCAT(%s, %s)\n", parts[0], parts[1]);
       return NFAOperations.concat(rd(parts[0], nfas), rd(parts[1], nfas));
     }
 
@@ -86,7 +80,6 @@ public class ScannerGenerator {
     if (star != -1 && line.charAt(star - 1) == ')') {
       int start = getStartOfGrouping(line, star - 1);
       if (start == 0) {
-        System.out.printf("STAR(%s)\n", line.substring(start + 1, star - 1));
         return NFAOperations.star(rd(line.substring(start + 1, star - 1), nfas));
       }
     }
@@ -95,14 +88,12 @@ public class ScannerGenerator {
     if (plus != -1 && line.charAt(plus - 1) == ')') {
       int start = getStartOfGrouping(line, plus - 1);
       if (start == 0) {
-        System.out.printf("PLUS(%s)\n", line.substring(start + 1, plus - 1));
         return NFAOperations.plus(rd(line.substring(start + 1, plus - 1), nfas));
       }
     }
 
     String[] unionParts = line.split("\\|");
     if (wellFormedBraces(unionParts[0]) && unionParts.length > 1) {
-      System.out.printf("UNION(%s, %s)\n", unionParts[0], unionParts[1]);
       return NFAOperations.union(rd(unionParts[0], nfas), rd(unionParts[1], nfas));
     }
 
@@ -120,7 +111,6 @@ public class ScannerGenerator {
     }
 
     if (unionParts.length > 1) {
-      System.out.printf("UNION(%s, %s)\n", unionParts[0], unionParts[1]);
       return NFAOperations.union(rd(unionParts[0], nfas), rd(unionParts[1], nfas));
     }
 
