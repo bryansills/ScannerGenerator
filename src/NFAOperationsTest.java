@@ -1,9 +1,6 @@
-import static org.junit.Assert.assertFalse;
-
 import java.util.Arrays;
 import java.util.HashSet;
 
-import junit.framework.Assert;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertNull;
