@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,17 +10,23 @@ public class DFAState {
 	private boolean isStart;
 	private List<Integer> idList;
 	
+	//TODO: Builderize
+	
 	public DFAState() {
 		this(true, new HashSet<Character>());
 	}
 	
 	public DFAState(int startId) {
+		idList = new ArrayList<Integer>();
 		this.idList.add(startId);
+		nextStates = new ArrayList<DFAState>();
 	}
 	
 	public DFAState(boolean aAccept, Set<Character> aTransition) {
 		accept = aAccept;
 		transition = aTransition;
+		idList = new ArrayList<Integer>();
+		nextStates = new ArrayList<DFAState>();
 	}
 	
 	public DFAState next(Character c) {

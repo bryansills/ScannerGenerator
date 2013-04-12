@@ -83,7 +83,12 @@ public class NFA {
 	  
 	  Set<NFAState> discovered = new HashSet<NFAState>();
 	  Stack<NFAState> nextStatesToExplore = new Stack<NFAState>();
-	  NFAState temp;
+	  NFAState temp = this.getStartState();
+	  nextStatesToExplore.push(temp);
+	  
+	  for(NFAState state : temp.getNextStates()) {
+		  nextStatesToExplore.push(state);
+	  }
 	  
 	  while(!nextStatesToExplore.empty()) {
 		  temp = nextStatesToExplore.pop();
