@@ -16,8 +16,8 @@ import java.util.Set;
 public class ScannerGenerator {
 
   public static void main(String[] args) {
-    if (args.length < 1) {
-      System.out.println("Usage: java ScannerGenerator <spec-file>");
+    if (args.length < 2) {
+      System.out.println("Usage: java ScannerGenerator <spec-file> <input-file>");
       System.exit(1);
     }
 
@@ -51,7 +51,15 @@ public class ScannerGenerator {
         nfas.put(temp[0], rd(temp[1], nfas));
       }
 
+      in = new BufferedReader(new FileReader(new File(args[1])));
+      List<String> inputs = new ArrayList<String>();
+      while ((line = in.readLine()) != null) {
+        inputs.add(line);
+      }
+      in.close();
+      for (String input : inputs) {
 
+      }
 
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
