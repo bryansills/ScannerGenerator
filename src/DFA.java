@@ -13,8 +13,6 @@ public class DFA {
 	private NFAState focus;
 	private List<NFAState> visited;
 	
-	private NFAState forkHack;
-	
 	public DFA() {}
 	
 	public DFA(Set<Character> chars) {}
@@ -55,6 +53,10 @@ public class DFA {
 		this.setStartState(start);
 		curr = start;
 		
+		for(NFAState state : focus.getNextStates()) {
+			curr.addToIdList(nfaStates.indexOf(state));
+		}
+		
 		//visited.add(focus);
 		//System.out.println(visited.get(0));
 		
@@ -62,7 +64,7 @@ public class DFA {
 		while(visited.size() <= nfaStates.size()) {		
 			explore(focus);
 		}
-		//System.out.println(nfa.getAllStates().size() + " " + visited.size());
+		System.out.println(nfa.getAllStates().size() + " " + (visited.size() - 1));
 	}
 	
 	/**
@@ -87,34 +89,13 @@ public class DFA {
 
 		for(NFAState nfaState: nextStates) {
 			
-			/* 
-			 * Check each adjacent state and see if its transition is epsilon.
-			 * If it is, add the id of the NFAState to the DFAState. If the
-			 * If the NFA state is accept, transfer that to the new DFA>
-			 */
-			if(nfaState.getTransition() == null) {
-				curr.addToIdList(nfaStates.indexOf(nfaState)); // test this hard
-				
-				if(nfaState.isAccept()) {
-					curr.setAccept(true);
-				}
-				if(nfaState.getIsStart()) {
-					curr.setIsStart(true);
-				}
-			}
-			else {
-				/*
-				 * If you haven't seen that transition yet, add it to the DFA
+				/* 
+				 * Check each adjacent state and see if its transition is epsilon.
+				 * If it is, add the id of the NFAState to the DFAState. If the
+				 * If the NFA state is accept, transfer that to the new DFA>
 				 */
-				if(!transitionsSeen.contains(nfaState.getTransition())) {
-					curr.addNext(DFAState.builder()
-							.setAccept(false)
-							.setTransition(nfaState.getTransition())
-							.build());
-					transitionsSeen.add(nfaState.getTransition());
-					curr = curr.next(nfaState.getTransition());
-
-					curr.addToIdList(nfaStates.indexOf(nfaState));
+				if(nfaState.getTransition() == null) {
+					curr.addToIdList(nfaStates.indexOf(nfaState)); // test this hard
 					
 					if(nfaState.isAccept()) {
 						curr.setAccept(true);
@@ -125,38 +106,59 @@ public class DFA {
 				}
 				else {
 					/*
-					 * If you've seen a transition before, but it wasn't the last
-					 * transition modified in your DFA
+					 * If you haven't seen that transition yet, add it to the DFA
 					 */
-					for(DFAState state : this.getAllStates()) {
-						if(state.getTransition() == nfaState.getTransition()) {
-							curr = state;
-							curr.addToIdList(nfaStates.indexOf(focus));
-							
-							if(nfaState.isAccept()) {
-								curr.setAccept(true);
-							}
-							if(nfaState.getIsStart()) {
-								curr.setIsStart(true);
+					if(!transitionsSeen.contains(nfaState.getTransition())) {
+						curr.addNext(DFAState.builder()
+								.setAccept(false)
+								.setTransition(nfaState.getTransition())
+								.build());
+						transitionsSeen.add(nfaState.getTransition());
+						curr = curr.next(nfaState.getTransition());
+	
+						curr.addToIdList(nfaStates.indexOf(nfaState));
+						
+						if(nfaState.isAccept()) {
+							curr.setAccept(true);
+						}
+						if(nfaState.getIsStart()) {
+							curr.setIsStart(true);
+						}
+					}
+					else {
+						/*
+						 * If you've seen a transition before, but it wasn't the last
+						 * transition modified in your DFA
+						 */
+						for(DFAState state : this.getAllStates()) {
+							if(state.getTransition() == nfaState.getTransition()) {
+								curr = state;
+								curr.addToIdList(nfaStates.indexOf(focus));
+								
+								if(nfaState.isAccept()) {
+									curr.setAccept(true);
+								}
+								if(nfaState.getIsStart()) {
+									curr.setIsStart(true);
+								}
 							}
 						}
 					}
 				}
-			}
-			for(NFAState nextState : focus.getNextStates()) {
-				/*if(!curr.getIdList().contains(nfaStates.indexOf(focus))) {
-					curr.addToIdList(nfaStates.indexOf(focus));
-				}*/
-				
-				focus = nextState;
-				
-				/*for(NFAState state : visited) {
-					System.out.print(visited.get(visited.indexOf(state)));
+				for(NFAState nextState : focus.getNextStates()) {
+					/*if(!curr.getIdList().contains(nfaStates.indexOf(nextState))) {
+						curr.addToIdList(nfaStates.indexOf(nextState));
+					}*/
+					
+					focus = nextState;
+					
+					/*for(NFAState state : visited) {
+						System.out.print(visited.get(visited.indexOf(state)));
+					}
+					System.out.println();*/
+					
+					explore(focus);
 				}
-				System.out.println();*/
-				
-				explore(focus);
-			}
 		}
 		//focus = forkHack;
 		return;
