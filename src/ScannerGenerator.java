@@ -52,13 +52,17 @@ public class ScannerGenerator {
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
+      // read in input file
       in = new BufferedReader(new FileReader(new File(args[1])));
       List<String> inputs = new ArrayList<String>();
       while ((line = in.readLine()) != null) {
         inputs.add(line);
       }
       in.close();
-      for (String input : inputs) { // lines
+
+
+      for (String input : inputs) {
+        // start by splitting by space
         String[] toks = input.split(" ");
         for (String t : toks) {
           boolean accepted = false;
