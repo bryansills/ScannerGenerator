@@ -1,3 +1,5 @@
+import static org.junit.Assert.assertFalse;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -73,6 +75,24 @@ public class NFAOperationsTest {
         assertFalse(result.accepts("aa"));
         assertFalse(result.accepts("ae"));
 
+    }
+
+    @Test
+    public void basicPlus() {
+        NFA left = new NFA(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})));
+
+        NFA result = NFAOperations.plus(left);
+
+        assert(result.accepts("a"));
+        assert(result.accepts("aa"));
+        assert(result.accepts("ab"));
+        assert(result.accepts("ba"));
+        assert(result.accepts("bccc"));
+        assertFalse(result.accepts(null));
+        assertFalse(result.accepts("x"));
+        assertFalse(result.accepts("ax"));
+        assertFalse(result.accepts("xc"));
+        assertFalse(result.accepts("cxa"));
     }
 
     @Test
@@ -182,23 +202,5 @@ public class NFAOperationsTest {
         assertFalse(result.accepts("xa"));
         assertFalse(result.accepts("ex"));
         assertFalse(result.accepts("axe"));
-    }
-
-    @Test
-    public void basicPlus() {
-        NFA left = new NFA(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})));
-
-        NFA result = NFAOperations.plus(left);
-
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("aa"));
-        assertTrue(result.accepts("ab"));
-        assertTrue(result.accepts("ba"));
-        assertTrue(result.accepts("bccc"));
-        assertFalse(result.accepts(null));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts("ax"));
-        assertFalse(result.accepts("xc"));
-        assertFalse(result.accepts("cxa"));
     }
 }
