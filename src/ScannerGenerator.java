@@ -52,6 +52,7 @@ public class ScannerGenerator {
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
+
       // read in input file
       in = new BufferedReader(new FileReader(new File(args[1])));
       List<String> inputs = new ArrayList<String>();
@@ -69,24 +70,25 @@ public class ScannerGenerator {
           for (Entry<String, NFA> nfa : regMap.entrySet()) {
             if (nfa.getValue().accepts(t)) {
               accepted = true;
-              System.out.println(nfa.getKey() + " " + t);
+              System.out.println(nfa.getKey().substring(1) + " " + t);
               break;
             }
           }
           if (!accepted) {
-            /*while (t.length() > 0) {
-              for (int i = 0; i < t.length(); i++) {
+            while (t.length() > 0) {
+              for (int i = t.length(); i >= 1; i--) {
                 for (Entry<String, NFA> nfa : regMap.entrySet()) {
-                  if (nfa.getValue().accepts(t.substring(0, i+1))) {
-                    System.out.println(nfa.getKey() + " " + t);
-                    t = t.substring(i+1);
-                    System.out.println(t);
+                  String sub = t.substring(0, i);
+                  if (nfa.getValue().accepts(sub)) {
+                    System.out.println(nfa.getKey().substring(1) + " " + sub);
+                    t = t.substring(i);
+                    i = t.length();
                   }
                 }
 
               }
 
-            }*/
+            }
           }
         }
       }
