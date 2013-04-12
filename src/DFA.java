@@ -42,18 +42,23 @@ public class DFA {
 		nfaStates = nfa.getAllStates();
 		transitionsSeen = new ArrayList<Set<Character>>();
 		visited = new ArrayList<NFAState>();
-		curr = DFAState.builder().build();  // necessary?
+		//curr = DFAState.builder().build();  // necessary?
 		
 		start = DFAState.builder()
 				.setFirstId(nfaStates.indexOf(focus))
+				.setIsStart(true)
 				.build();
 		this.setStartState(start);
 		curr = start;
 		
+		//visited.add(focus);
+		//System.out.println(visited.get(0));
+		
 		/* Execute until you've visited every NFAState */
-		while(visited.size() != nfaStates.size()) {		
+		while(visited.size() <= nfaStates.size()) {		
 			explore(focus);
 		}
+		//System.out.println(nfa.getAllStates().size() + " " + visited.size());
 	}
 	
 	/**
@@ -63,9 +68,11 @@ public class DFA {
 	 * @return
 	 */
 	public void explore(NFAState focus) {
+		visited.add(focus);
+		
 		if(focus.getNextStates().isEmpty()) {
-			System.out.println("whaaat");
-			System.out.println(this.getAllStates().size());
+			//System.out.println("whaaat");
+			//System.out.println(this.getAllStates().size());
 			return;
 		}
 		
@@ -134,7 +141,12 @@ public class DFA {
 		
 		for(NFAState nextState : focus.getNextStates()) {
 			focus = nextState;
-			visited.add(nextState);
+			
+			/*for(NFAState state : visited) {
+				System.out.print(visited.get(visited.indexOf(state)));
+			}
+			System.out.println();*/
+			
 			explore(focus);
 		}
 	}
