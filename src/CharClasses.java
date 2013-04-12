@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,42 @@ public class CharClasses {
   public static Map<String, Set<Character>> buildMapFromSpec(String classSpec) throws BadSpecException {
     return buildMapFromSpec(Arrays.asList(classSpec.split("\n")));
   }
+  public static String[] split(String line) {
+    List<String> list = new ArrayList<String>();
+
+    if (line.length() > 1) {
+      char last = line.charAt(0);
+      int start = 1;
+      boolean open = false;
+      String temp = "" + last;
+      for (int i = start; i < line.length(); i++) {
+        char cur = line.charAt(i);
+        if (last != '\\' && cur == '[') {
+          open = true;
+        } else if ((!open && cur == ' ') || (i == line.length() - 1)) {
+          if (cur != ' ') {
+            temp += cur;
+          }
+          list.add(temp);
+          temp = "";
+          last = cur;
+          continue;
+        } else if (last != '\\' && cur == ']') {
+          open = false;
+        }
+        temp += cur;
+        last = cur;
+      }
+    }
+    System.out.println(list);
+
+    String[] arr = new String[list.size()];
+    for (int i = 0; i < arr.length; i++) {
+      arr[i] = list.get(i);
+    }
+
+    return arr;
+  }
   /**
    * Returns a map containing the character classes and accepted chars.
    * @param classSpec
@@ -28,11 +65,11 @@ public class CharClasses {
     // split into lines
     for (String line : classSpec) {
       // break up the line into parts.
-      String[] tokens = line.split(" ");
+      String[] tokens = split(line);
       Set<Character> chars = new HashSet<Character>();
       Set<Character> excludeSet = new HashSet<Character>();
       Set<Character> escaped = new HashSet<Character>(
-          Arrays.asList(new Character[]{'-', '^', '\\', '[',']'}));
+          Arrays.asList(new Character[]{'-', '^', '\\', '[',']', ' '}));
       classes.put(tokens[0], chars);
       char[] range = tokens[1].toCharArray();
       if (range[0] != '[' || range[range.length - 1] != ']') {

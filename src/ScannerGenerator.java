@@ -137,7 +137,7 @@ public class ScannerGenerator {
     if (plus != -1 && line.charAt(plus - 1) == ')') {
       int start = getStartOfGrouping(line, plus - 1);
       if (start == 0) {
-        System.out.printf("PLUS %s & %s\n", line.substring(start + 1, plus - 1));
+        System.out.printf("PLUS %s \n", line.substring(start + 1, plus - 1));
         return NFAOperations.plus(rd(line.substring(start + 1, plus - 1), nfas));
       }
     }
