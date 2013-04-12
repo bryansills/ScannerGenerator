@@ -75,6 +75,9 @@ public class DFA {
 				if(nfaState.isAccept()) {
 					curr.setAccept(true);
 				}
+				if(nfaState.getIsStart()) {
+					curr.setIsStart(true);
+				}
 			}
 			else {
 				/*

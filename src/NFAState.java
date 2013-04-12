@@ -10,6 +10,7 @@ public class NFAState {
     private Set<Character> transition;
     private List<NFAState> nextStates;
     private boolean accept;
+    private boolean isStart;
 
     public Builder() {
       nextStates = new ArrayList<NFAState>();
@@ -27,6 +28,11 @@ public class NFAState {
     public Builder setAccept(boolean accept) {
       this.accept = accept;
       return this;
+    }
+    
+    public Builder setIsStart(boolean start) {
+    	this.isStart = start;
+    	return this;
     }
 
     public Builder setNextStates(List<NFAState> nextStates) {
@@ -48,8 +54,10 @@ public class NFAState {
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
+  private boolean isStart;
 
   private NFAState(Builder b) {
+	this.isStart = b.isStart;
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
@@ -158,5 +166,9 @@ public class NFAState {
 
   public List<NFAState> getNextStates() {
     return nextStates;
+  }
+  
+  public boolean getIsStart() {
+	  return isStart;
   }
 }
