@@ -73,18 +73,17 @@ public class ScannerGenerator {
         for (String t : toks) {
           String classification = reg.accepts(t);
           if (reg.accepts(t) != null) {
-            System.out.println(classification + " " + t);
-            break;
-            }
+            System.out.println(classification.substring(1) + " " + t);
+          }
           else {
             while (t.length() > 0) {
               for (int i = t.length(); i >= 1; i--) {
                 String sub = t.substring(0, i);
                 String subClassif = reg.accepts(sub);
                 if (subClassif != null) {
-                  System.out.println(subClassif + " " + sub);
+                  System.out.println(subClassif.substring(1) + " " + sub);
                   t = t.substring(i);
-                  i = t.length();
+                  i = t.length() + 1;
                 }
               }
 
