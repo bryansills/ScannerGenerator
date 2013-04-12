@@ -10,6 +10,7 @@ public class NFAState {
     private Set<Character> transition;
     private List<NFAState> nextStates;
     private boolean accept;
+    private String name;
 
     public Builder() {
       nextStates = new ArrayList<NFAState>();
@@ -39,6 +40,11 @@ public class NFAState {
       return this;
     }
 
+    public Builder setName(String name) {
+      this.name = name;
+      return this;
+    }
+
     public NFAState build() {
       return new NFAState(this);
     }
@@ -48,11 +54,13 @@ public class NFAState {
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
+  private String name;
 
   private NFAState(Builder b) {
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
+    this.name = name;
   }
 
   public static Builder builder() {
@@ -74,42 +82,59 @@ public class NFAState {
     return states;
   }
 
+    public String accepts(String str) {
+        //if we have gone through the entire string and the current state is an accept
+        //state, then the NFA accepts the string
+        if (this.isAccept() && (str == null || str.length() == 0)) {
+            if (name != null) {
+                return name;
+            } else {
+                return "";
+            }
+        }
 
-  public boolean accepts(String str) {
-    //if we have gone through the entire string and the current state is an accept
-    //state, then the NFA accepts the string
-    if (this.isAccept() && (str == null || str.length() == 0)) {
-      return true;
+        String nfaName = null;
+        Character nextChar = null;
+        List<NFAState> nStates;
+        if (!(str == null) && str.length() >= 1) {
+            //else, get the next character in the string
+            nextChar = str.charAt(0);
+
+            nStates = next(nextChar);
+
+            //if there are states that accept the next character, recursively call this method
+            //on the str, minus the first character
+            for (NFAState state : nStates) {
+                String tempName = state.accepts(str.substring(1));
+                if (tempName != null) {
+                    if (name != null) {
+                        nfaName = name;
+                    } else {
+                        nfaName = tempName;
+                    }
+                }
+            }
+        }
+
+        //if there are no states that accept the next character, try using an empty string
+        //transition with the full string
+        nextChar = null;
+        nStates = next(nextChar);
+
+        for (NFAState state : nStates) {
+            String tempName = state.accepts(str);
+            if (tempName != null) {
+                if (name != null) {
+                    nfaName = name;
+                } else {
+                    nfaName = tempName;
+                }
+            }
+        }
+
+        //string might not be accepted by the NFA. go up the recursive stack
+        return nfaName;
     }
-
-    boolean anyTrue = false;
-    Character nextChar = null;
-    List<NFAState> nStates;
-    if (!(str == null) && str.length() >= 1) {
-      //else, get the next character in the string
-      nextChar = str.charAt(0);
-
-      nStates = next(nextChar);
-
-      //if there are states that accept the next character, recursively call this method
-      //on the str, minus the first character
-      for (NFAState state : nStates) {
-        anyTrue = anyTrue || state.accepts(str.substring(1));
-      }
-    }
-
-    //if there are no states that accept the next character, try using an empty string
-    //transition with the full string
-    nextChar = null;
-    nStates = next(nextChar);
-
-    for (NFAState state : nStates) {
-      anyTrue = anyTrue || state.accepts(str);
-    }
-
-    //string might not be accepted by the NFA. go up the recursive stack
-    return anyTrue;
-  }
 
   /**
    * Get the characters this state will accept
@@ -158,5 +183,14 @@ public class NFAState {
 
   public List<NFAState> getNextStates() {
     return nextStates;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public NFAState setName(String name) {
+    this.name = name;
+    return this;
   }
 }

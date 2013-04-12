@@ -65,7 +65,7 @@ public class NFA {
   	return acceptStates;
   }
 
-  public boolean accepts(String str) {
+  public String accepts(String str) {
       return start.accepts(str);
   }
 

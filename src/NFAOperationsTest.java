@@ -3,8 +3,8 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 public class NFAOperationsTest {
 
@@ -15,12 +15,12 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.concat(left, right);
 
-        assertTrue(result.accepts("ab"));
-        assertTrue(result.accepts("ac"));
-        assertTrue(result.accepts("aa"));
-        assertTrue(result.accepts("bb"));
-        assertFalse(result.accepts("a"));
-        assertFalse(result.accepts("aaa"));
+        assertNotNull(result.accepts("ab"));
+        assertNotNull(result.accepts("ac"));
+        assertNotNull(result.accepts("aa"));
+        assertNotNull(result.accepts("bb"));
+        assertNull(result.accepts("a"));
+        assertNull(result.accepts("aaa"));
     }
 
     @Test
@@ -31,14 +31,14 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.concat(NFAOperations.concat(left, middle), right);
 
-        assertTrue(result.accepts("aaa"));
-        assertTrue(result.accepts("abc"));
-        assertTrue(result.accepts("cba"));
-        assertFalse(result.accepts("xxx"));
-        assertFalse(result.accepts("axx"));
-        assertFalse(result.accepts("xxa"));
-        assertFalse(result.accepts("aa"));
-        assertFalse(result.accepts("aaaa"));
+        assertNotNull(result.accepts("aaa"));
+        assertNotNull(result.accepts("abc"));
+        assertNotNull(result.accepts("cba"));
+        assertNull(result.accepts("xxx"));
+        assertNull(result.accepts("axx"));
+        assertNull(result.accepts("xxa"));
+        assertNull(result.accepts("aa"));
+        assertNull(result.accepts("aaaa"));
     }
 
     @Test
@@ -49,14 +49,14 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.concat(NFAOperations.concat(left, middle), right);
 
-        assertTrue(result.accepts("aa"));
-        assertTrue(result.accepts("ac"));
-        assertTrue(result.accepts("ca"));
-        assertFalse(result.accepts("xx"));
-        assertFalse(result.accepts("ax"));
-        assertFalse(result.accepts("xa"));
-        assertFalse(result.accepts("a"));
-        assertFalse(result.accepts("aaa"));
+        assertNotNull(result.accepts("aa"));
+        assertNotNull(result.accepts("ac"));
+        assertNotNull(result.accepts("ca"));
+        assertNull(result.accepts("xx"));
+        assertNull(result.accepts("ax"));
+        assertNull(result.accepts("xa"));
+        assertNull(result.accepts("a"));
+        assertNull(result.accepts("aaa"));
     }
 
     @Test
@@ -66,12 +66,12 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.union(left, right);
 
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("d"));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts(null));
-        assertFalse(result.accepts("aa"));
-        assertFalse(result.accepts("ae"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("d"));
+        assertNull(result.accepts("x"));
+        assertNull(result.accepts(null));
+        assertNull(result.accepts("aa"));
+        assertNull(result.accepts("ae"));
 
     }
 
@@ -83,13 +83,13 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.union(NFAOperations.union(left, middle), right);
 
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("d"));
-        assertTrue(result.accepts("h"));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts(null));
-        assertFalse(result.accepts("aa"));
-        assertFalse(result.accepts("ga"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("d"));
+        assertNotNull(result.accepts("h"));
+        assertNull(result.accepts("x"));
+        assertNull(result.accepts(null));
+        assertNull(result.accepts("aa"));
+        assertNull(result.accepts("ga"));
     }
 
     @Test
@@ -100,18 +100,18 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.union(NFAOperations.concat(left, leftSecond), right);
 
-        assertTrue(result.accepts("ad"));
-        assertTrue(result.accepts("be"));
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("h"));
-        assertFalse(result.accepts("b"));
-        assertFalse(result.accepts("bh"));
-        assertFalse(result.accepts("aa"));
-        assertFalse(result.accepts("bbc"));
-        assertFalse(result.accepts("bx"));
-        assertFalse(result.accepts("xe"));
-        assertFalse(result.accepts("e"));
-        assertFalse(result.accepts("fb"));
+        assertNotNull(result.accepts("ad"));
+        assertNotNull(result.accepts("be"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("h"));
+        assertNull(result.accepts("b"));
+        assertNull(result.accepts("bh"));
+        assertNull(result.accepts("aa"));
+        assertNull(result.accepts("bbc"));
+        assertNull(result.accepts("bx"));
+        assertNull(result.accepts("xe"));
+        assertNull(result.accepts("e"));
+        assertNull(result.accepts("fb"));
     }
 
     @Test
@@ -120,19 +120,19 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.star(left);
 
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("aa"));
-        assertTrue(result.accepts("aaa"));
-        assertTrue(result.accepts("abc"));
-        assertTrue(result.accepts("acb"));
-        assertTrue(result.accepts("bca"));
-        assertTrue(result.accepts(null));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts("ax"));
-        assertFalse(result.accepts("xa"));
-        assertFalse(result.accepts("axa"));
-        assertFalse(result.accepts("axb"));
-        assertFalse(result.accepts("xbx"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("aa"));
+        assertNotNull(result.accepts("aaa"));
+        assertNotNull(result.accepts("abc"));
+        assertNotNull(result.accepts("acb"));
+        assertNotNull(result.accepts("bca"));
+        assertNotNull(result.accepts(null));
+        assertNull(result.accepts("x"));
+        assertNull(result.accepts("ax"));
+        assertNull(result.accepts("xa"));
+        assertNull(result.accepts("axa"));
+        assertNull(result.accepts("axb"));
+        assertNull(result.accepts("xbx"));
     }
 
     @Test
@@ -142,25 +142,25 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.star(NFAOperations.concat(left, right));
 
-        assertTrue(result.accepts("ad"));
-        assertTrue(result.accepts("be"));
-        assertTrue(result.accepts("adad"));
-        assertTrue(result.accepts("bfbf"));
-        assertTrue(result.accepts("adbf"));
-        assertTrue(result.accepts("bdcdbf"));
-        assertTrue(result.accepts(null));
-        assertFalse(result.accepts("da"));
-        assertFalse(result.accepts("ade"));
-        assertFalse(result.accepts("aebb"));
-        assertFalse(result.accepts("xd"));
-        assertFalse(result.accepts("cx"));
-        assertFalse(result.accepts("bfx"));
-        assertFalse(result.accepts("xda"));
-        assertFalse(result.accepts("cxa"));
-        assertFalse(result.accepts("aecx"));
-        assertFalse(result.accepts("bdxf"));
-        assertFalse(result.accepts("cxaf"));
-        assertFalse(result.accepts("xdbf"));
+        assertNotNull(result.accepts("ad"));
+        assertNotNull(result.accepts("be"));
+        assertNotNull(result.accepts("adad"));
+        assertNotNull(result.accepts("bfbf"));
+        assertNotNull(result.accepts("adbf"));
+        assertNotNull(result.accepts("bdcdbf"));
+        assertNotNull(result.accepts(null));
+        assertNull(result.accepts("da"));
+        assertNull(result.accepts("ade"));
+        assertNull(result.accepts("aebb"));
+        assertNull(result.accepts("xd"));
+        assertNull(result.accepts("cx"));
+        assertNull(result.accepts("bfx"));
+        assertNull(result.accepts("xda"));
+        assertNull(result.accepts("cxa"));
+        assertNull(result.accepts("aecx"));
+        assertNull(result.accepts("bdxf"));
+        assertNull(result.accepts("cxaf"));
+        assertNull(result.accepts("xdbf"));
     }
 
     @Test
@@ -170,18 +170,18 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.star(NFAOperations.union(left, right));
 
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("e"));
-        assertTrue(result.accepts("bd"));
-        assertTrue(result.accepts("fa"));
-        assertTrue(result.accepts("aaa"));
-        assertTrue(result.accepts("dbb"));
-        assertTrue(result.accepts("efa"));
-        assertTrue(result.accepts(null));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts("xa"));
-        assertFalse(result.accepts("ex"));
-        assertFalse(result.accepts("axe"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("e"));
+        assertNotNull(result.accepts("bd"));
+        assertNotNull(result.accepts("fa"));
+        assertNotNull(result.accepts("aaa"));
+        assertNotNull(result.accepts("dbb"));
+        assertNotNull(result.accepts("efa"));
+        assertNotNull(result.accepts(null));
+        assertNull(result.accepts("x"));
+        assertNull(result.accepts("xa"));
+        assertNull(result.accepts("ex"));
+        assertNull(result.accepts("axe"));
     }
 
     @Test
@@ -190,15 +190,15 @@ public class NFAOperationsTest {
 
         NFA result = NFAOperations.plus(left);
 
-        assertTrue(result.accepts("a"));
-        assertTrue(result.accepts("aa"));
-        assertTrue(result.accepts("ab"));
-        assertTrue(result.accepts("ba"));
-        assertTrue(result.accepts("bccc"));
-        assertFalse(result.accepts(null));
-        assertFalse(result.accepts("x"));
-        assertFalse(result.accepts("ax"));
-        assertFalse(result.accepts("xc"));
-        assertFalse(result.accepts("cxa"));
+        assertNotNull(result.accepts("a"));
+        assertNotNull(result.accepts("aa"));
+        assertNotNull(result.accepts("ab"));
+        assertNotNull(result.accepts("ba"));
+        assertNotNull(result.accepts("bccc"));
+        assertNull(result.accepts(null));
+        assertNull(result.accepts("x"));
+        assertNull(result.accepts("ax"));
+        assertNull(result.accepts("xc"));
+        assertNull(result.accepts("cxa"));
     }
 }
