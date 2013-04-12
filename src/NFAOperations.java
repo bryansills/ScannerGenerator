@@ -78,7 +78,7 @@ public class NFAOperations {
   	 * Ex. ($DIGIT+)
   	 */
   	public static NFA plus(NFA nfa_a) {
-  		return union(nfa_a, star(nfa_a));
+  		return concat(nfa_a, star(nfa_a));
   	}
 
 }
