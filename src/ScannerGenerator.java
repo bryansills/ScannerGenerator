@@ -43,12 +43,13 @@ public class ScannerGenerator {
       for (Entry<String, Set<Character>> entry : classes.entrySet()) {
         nfas.put(entry.getKey(), new NFA(entry.getValue()));
       }
+      Map<String, NFA> regMap = new HashMap<String, NFA>();
 
       for (String regex : spec) {
         String[] temp = regex.split(" ", 2);
         // dirty i know. This gets the identifier out of the line
         // and sends the regex to the rd method
-        nfas.put(temp[0], rd(temp[1], nfas));
+        regMap.put(temp[0], rd(temp[1], nfas));
       }
 
       in = new BufferedReader(new FileReader(new File(args[1])));
@@ -57,8 +58,33 @@ public class ScannerGenerator {
         inputs.add(line);
       }
       in.close();
-      for (String input : inputs) {
+      for (String input : inputs) { // lines
+        String[] toks = input.split(" ");
+        for (String t : toks) {
+          boolean accepted = false;
+          for (Entry<String, NFA> nfa : regMap.entrySet()) {
+            if (nfa.getValue().accepts(t)) {
+              accepted = true;
+              System.out.println(nfa.getKey() + " " + t);
+              break;
+            }
+          }
+          if (!accepted) {
+            /*while (t.length() > 0) {
+              for (int i = 0; i < t.length(); i++) {
+                for (Entry<String, NFA> nfa : regMap.entrySet()) {
+                  if (nfa.getValue().accepts(t.substring(0, i+1))) {
+                    System.out.println(nfa.getKey() + " " + t);
+                    t = t.substring(i+1);
+                    System.out.println(t);
+                  }
+                }
 
+              }
+
+            }*/
+          }
+        }
       }
 
     } catch (FileNotFoundException e) {

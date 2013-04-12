@@ -13,6 +13,11 @@ import java.util.Stack;
 public class NFA {
   private NFAState start;
 
+  public NFA() {
+    this.start = NFAState.builder()
+        .build();
+  }
+
   /**
    * Creates a primitive nfa based on a char class
    * @param chars the accepted characters from a char class
@@ -28,9 +33,6 @@ public class NFA {
         .build();
   }
 
-  public NFA() {
-    // TODO Auto-generated constructor stub
-  }
 
   /**
    * Returns a list of accept states in a given NFA.
