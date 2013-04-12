@@ -1,9 +1,9 @@
+import static org.junit.Assert.assertFalse;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 public class NFAOperationsTest {
 
@@ -72,4 +72,22 @@ public class NFAOperationsTest {
         assertFalse(result.accepts("ae"));
 
     }
+    @Test
+    public void basicPlus() {
+        NFA left = new NFA(new HashSet<Character>(Arrays.asList(new Character[]{'a', 'b', 'c'})));
+
+        NFA result = NFAOperations.plus(left);
+
+        assert(result.accepts("a"));
+        assert(result.accepts("aa"));
+        assert(result.accepts("ab"));
+        assert(result.accepts("ba"));
+        assert(result.accepts("bccc"));
+        assertFalse(result.accepts(null));
+        assertFalse(result.accepts("x"));
+        assertFalse(result.accepts("ax"));
+        assertFalse(result.accepts("xc"));
+        assertFalse(result.accepts("cxa"));
+    }
+
 }

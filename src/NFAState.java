@@ -10,6 +10,7 @@ public class NFAState {
     private Set<Character> transition;
     private List<NFAState> nextStates;
     private boolean accept;
+    private boolean visited;
 
     public Builder() {
       nextStates = new ArrayList<NFAState>();
@@ -39,6 +40,11 @@ public class NFAState {
       return this;
     }
 
+    private Builder setVisited(boolean visited) {
+      this.visited = visited;
+      return this;
+    }
+
     public NFAState build() {
       return new NFAState(this);
     }
@@ -48,11 +54,13 @@ public class NFAState {
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
+  private boolean visited;
 
   private NFAState(Builder b) {
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
+    this.visited = b.visited;
   }
 
   public static Builder builder() {
@@ -163,16 +171,20 @@ public class NFAState {
     if (nextStates.size() > 0) {
       List<NFAState> copiedNext = new ArrayList<NFAState>();
       for (NFAState old : nextStates) {
-        copiedNext.add(old.copy());
+        if (!old.visited) {
+          copiedNext.add(old.copy());
+        }
       }
       return NFAState.builder()
           .setAccept(accept)
           .setNextStates(copiedNext)
           .setTransition(transition)
+          .setVisited(true)
           .build();
     }
     return NFAState.builder()
         .setAccept(accept)
+        .setVisited(true)
         .setTransition(transition).build();
   }
 }

@@ -52,6 +52,7 @@ public class ScannerGenerator {
       }
 
 
+
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
       e.printStackTrace();
