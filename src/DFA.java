@@ -21,6 +21,14 @@ public class DFA {
 		nfaToDfa(nfa);
 	}
 	
+	public DFAState getStartState() {
+		return start;
+	}
+	
+	public void setStartState(DFAState newStart) {
+		start = newStart;
+	}
+	
 	/**
 	 * Takes in an NFA and converts it to a DFA
 	 * @param nfa

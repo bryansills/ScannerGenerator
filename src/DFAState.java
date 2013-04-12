@@ -6,6 +6,7 @@ public class DFAState {
 	private List<DFAState> nextStates;
 	private Set<Character> transition;
 	private boolean accept;
+	private boolean isStart;
 	private List<Integer> idList;
 	
 	public DFAState() {
@@ -65,8 +66,20 @@ public class DFAState {
 			|| transition != null && transition.contains(charSet);	// test
 	}
 	
+	public boolean getAccept() {
+		return accept;
+	}
+	
 	public void setAccept(boolean isAccept) {
 		accept = isAccept;
+	}
+	
+	public boolean getIsStart() {
+		return isStart;
+	}
+	
+	public void setIsStart(boolean newIsStart) {
+		isStart = newIsStart;
 	}
 	
 	public void addNext(DFAState state) {
