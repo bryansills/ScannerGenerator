@@ -15,6 +15,7 @@ public class DFAState {
 		
 		public Builder() {
 			nextStates = new ArrayList<DFAState>();
+			idList = new ArrayList<Integer>();
 		}
 		
 		public Builder setTransition(Set<Character> transition) {
