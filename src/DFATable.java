@@ -8,8 +8,8 @@ public class DFATable {
 	List<DFAState> currState;
 	List<Set<Character>> input;
 	List<DFAState> nextState;
-	List<Integer> isStartState;
-	List<Integer> isAcceptState;
+	List<Boolean> isStartState;
+	List<Boolean> isAcceptState;
 	
 	
 	public DFATable(DFA aDfa) {
@@ -17,8 +17,8 @@ public class DFATable {
 		currState = new ArrayList<DFAState>();
 		input = new ArrayList<Set<Character>>();
 		nextState = new ArrayList<DFAState>();
-		isStartState = new ArrayList<Integer>();
-		isAcceptState = new ArrayList<Integer>();
+		isStartState = new ArrayList<Boolean>();
+		isAcceptState = new ArrayList<Boolean>();
 		
 		populateDfaTable(this);
 	}
@@ -39,17 +39,17 @@ public class DFATable {
 				input.add(dfaState.getTransition());
 				
 				if(currentState.getAccept()) {
-					isAcceptState.add(1);
+					isAcceptState.add(true);
 				}
 				else {
-					isAcceptState.add(0);
+					isAcceptState.add(false);
 				}
 				
 				if(currentState.getIsStart()) {
-					isStartState.add(1);
+					isStartState.add(true);
 				}
 				else {
-					isAcceptState.add(0);
+					isAcceptState.add(false);
 				}
 			}
 			

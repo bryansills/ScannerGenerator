@@ -86,10 +86,6 @@ public class NFA {
 	  NFAState temp = this.getStartState();
 	  nextStatesToExplore.push(temp);
 	  
-	  for(NFAState state : temp.getNextStates()) {
-		  nextStatesToExplore.push(state);
-	  }
-	  
 	  while(!nextStatesToExplore.empty()) {
 		  temp = nextStatesToExplore.pop();
 		  allStates.add(temp);

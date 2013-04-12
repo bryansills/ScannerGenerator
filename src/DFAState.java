@@ -76,23 +76,6 @@ public class DFAState {
 		return new Builder();
 	}
 	
-	/*public DFAState() {
-		this(true, new HashSet<Character>());
-	}
-	
-	public DFAState(int startId) {
-		idList = new ArrayList<Integer>();
-		this.idList.add(startId);
-		nextStates = new ArrayList<DFAState>();
-	}
-	
-	public DFAState(boolean aAccept, Set<Character> aTransition) {
-		accept = aAccept;
-		transition = aTransition;
-		idList = new ArrayList<Integer>();
-		nextStates = new ArrayList<DFAState>();
-	}
-	*/
 	public DFAState next(Character c) {
 		DFAState nextState = DFAState.builder().build();
 		
