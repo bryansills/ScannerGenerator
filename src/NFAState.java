@@ -193,4 +193,10 @@ public class NFAState {
     this.name = name;
     return this;
   }
+
+  public NFAState copy() {
+    return NFAState.builder()
+        .setAccept(accept)
+        .setTransition(transition).build();
+  }
 }
