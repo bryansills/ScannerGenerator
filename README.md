@@ -6,4 +6,4 @@ In order to run this run the following commands.
     $ javac ScannerGenerator.java
 
 ## Running Instructions
-    $ java ScannerGenerator <spec-file> <input-file>'''
+    $ java ScannerGenerator <spec-file> <input-file>
