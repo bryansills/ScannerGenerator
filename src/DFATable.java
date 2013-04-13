@@ -141,11 +141,7 @@ public class DFATable {
             indexes = indexesOf(currState, nState);
         }
 
-        if (isAcceptState.get(ind)) {
-            return true;
-        } else {
-            return false;
-        }
+        return isAcceptState.get(ind);
     }
 
     private <T> List<Integer> indexesOf(List<T> source, T target)

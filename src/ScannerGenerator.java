@@ -52,6 +52,15 @@ public class ScannerGenerator {
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
+      Map<String, DFA> dfas = new HashMap<String, DFA>();
+      for (Entry<String, NFA> nfa : regMap.entrySet()) {
+        dfas.put(nfa.getKey(), new DFA(nfa.getValue()));
+      }
+
+      Map<String, DFATable> dfaTable = new HashMap<String, DFATable>();
+      for (Entry<String, DFA> dfa : dfas.entrySet()) {
+        dfaTable.put(dfa.getKey(), new DFATable(dfa.getValue()));
+      }
 
       // read in input file
       in = new BufferedReader(new FileReader(new File(args[1])));
