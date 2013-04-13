@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,8 +49,6 @@ public class ScannerGenerator {
 
       for (String regex : spec) {
         String[] temp = regex.split(" ", 2);
-        // dirty i know. This gets the identifier out of the line
-        // and sends the regex to the rd method
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
@@ -61,6 +61,8 @@ public class ScannerGenerator {
       }
       in.close();
 
+      PrintWriter out = new PrintWriter(new FileWriter(new File("OutputTokens.txt")));
+
 
       for (String input : inputs) {
         // start by splitting by space
@@ -70,7 +72,7 @@ public class ScannerGenerator {
           for (Entry<String, NFA> nfa : regMap.entrySet()) {
             if (nfa.getValue().accepts(t)) {
               accepted = true;
-              System.out.println(nfa.getKey().substring(1) + " " + t);
+              out.println(nfa.getKey().substring(1) + " " + t);
               break;
             }
           }
@@ -80,7 +82,7 @@ public class ScannerGenerator {
                 for (Entry<String, NFA> nfa : regMap.entrySet()) {
                   String sub = t.substring(0, i);
                   if (nfa.getValue().accepts(sub)) {
-                    System.out.println(nfa.getKey().substring(1) + " " + sub);
+                    out.println(nfa.getKey().substring(1) + " " + sub);
                     t = t.substring(i);
                     i = t.length();
                   }
@@ -92,7 +94,7 @@ public class ScannerGenerator {
           }
         }
       }
-
+      out.close();
     } catch (FileNotFoundException e) {
       System.err.println("Can't Find that file");
       e.printStackTrace();
@@ -109,14 +111,11 @@ public class ScannerGenerator {
   // (($DIGIT|$LOWER) ($ASSDF))+
   private static NFA rd(String line, Map<String, NFA> nfas) {
     if (line.length() == 0) {
-      System.out.println("Empty String");
       return new NFA(null); // empty string transition
     }
-    System.out.println(line);
     String[] parts = line.split(" ", 2);
     // handle concat
     if (wellFormedBraces(parts[0]) && parts.length > 1) {
-      System.out.printf("CONCAT %s & %s\n", parts[0], parts[1]);
       return NFAOperations.concat(rd(parts[0], nfas), rd(parts[1], nfas));
     }
 
@@ -125,30 +124,39 @@ public class ScannerGenerator {
     // TODO(magicjarvis): Make this prettier. I demand it.
     // check for escaped stuff when this works
     int star = line.indexOf('*');
-    if (star != -1 && line.charAt(star - 1) == ')') {
+    if (star != -1 && line.indexOf("\\*") + 1 != star && line.charAt(star - 1) == ')') {
       int start = getStartOfGrouping(line, star - 1);
       if (start == 0) {
-        System.out.printf("STAR %s\n", line.substring(start + 1, star - 1));
-        return NFAOperations.star(rd(line.substring(start + 1, star - 1), nfas));
+        if (star < line.length() - 1) {
+          return NFAOperations.concat(NFAOperations.star(rd(line.substring(start + 1, star - 1), nfas)), rd(line.substring(star + 1), nfas));
+        } else {
+          return NFAOperations.star(rd(line.substring(start + 1, star - 1), nfas));
+
+        }
       }
     }
 
     int plus = line.indexOf('+');
-    if (plus != -1 && line.charAt(plus - 1) == ')') {
+    if (plus != -1 && line.indexOf("\\+") + 1 != plus && line.charAt(plus - 1) == ')') {
       int start = getStartOfGrouping(line, plus - 1);
       if (start == 0) {
-        System.out.printf("PLUS %s & %s\n", line.substring(start + 1, plus - 1));
-        return NFAOperations.plus(rd(line.substring(start + 1, plus - 1), nfas));
+        if (plus < line.length() - 1) {
+          return NFAOperations.concat(NFAOperations.star(rd(line.substring(start + 1, plus - 1), nfas)), rd(line.substring(plus + 1), nfas));
+        } else {
+          return NFAOperations.plus(rd(line.substring(start + 1, plus - 1), nfas));
+        }
       }
     }
 
-    String[] unionParts = line.split("\\|");
+    String[] unionParts = line.split("\\|", 2);
     if (wellFormedBraces(unionParts[0]) && unionParts.length > 1) {
       return NFAOperations.union(rd(unionParts[0], nfas), rd(unionParts[1], nfas));
     }
 
+    // check if one level deep ()s
+    //if (line.charAt(index))
     int lastParen = line.lastIndexOf(')');
-    if (lastParen != -1) {
+    if (lastParen != -1 && line.lastIndexOf("\\(") + 1 != lastParen) {
       int start = getStartOfGrouping(line, lastParen);
       if (start == 0) {
         String grouping = line.substring(start + 1, lastParen);
@@ -160,7 +168,7 @@ public class ScannerGenerator {
       }
     }
 
-    if (unionParts.length > 1) {
+    if (wellFormedBraces(unionParts[0]) && unionParts.length > 1) {
       return NFAOperations.union(rd(unionParts[0], nfas), rd(unionParts[1], nfas));
     }
 
@@ -168,6 +176,18 @@ public class ScannerGenerator {
     // handle grouping and |
     // handle char class
     char first = line.charAt(0);
+    if (first == '(') {
+      int open = 1;
+      char last = first;
+      for (int i = 1; i < line.length(); i++) {
+        if (line.charAt(i) == ')' && last != '\\') {
+          open--;
+        }
+        if (open == 0) {
+          return NFAOperations.concat(rd(line.substring(1, i), nfas), rd(line.substring(i+1), nfas));
+        }
+      }
+    }
     if (first != '$') {
       if (first == '.') {
         Set<Character> ascii = new HashSet<Character>();
