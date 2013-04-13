@@ -45,7 +45,6 @@ public class CharClasses {
         last = cur;
       }
     }
-    System.out.println(list);
 
     String[] arr = new String[list.size()];
     for (int i = 0; i < arr.length; i++) {
@@ -119,7 +118,6 @@ public class CharClasses {
         }
       }
     }
-    System.out.println(classes);
     return classes;
   }
 }
