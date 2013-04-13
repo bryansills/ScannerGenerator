@@ -1,4 +1,6 @@
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -80,6 +82,23 @@ public class NFATest {
         assertFalse(result.accepts("aaaa"));
         assertFalse(result.accepts("xxxx"));
         assertFalse(result.accepts("aaax"));
+
+    }
+
+    @Test
+    public void copyShouldTerminate() {
+      NFA digit = new NFA(new HashSet<Character>(
+          Arrays.asList(new Character[]{'0', '1', '2'})));
+
+      NFA copy = digit.copy();
+
+      NFAState digitStart = digit.getStartState();
+      NFAState copyStart = copy.getStartState();
+
+      assertNotSame(digit, copy);
+      assertNotSame(digitStart, copyStart);
+      assertNotSame(digitStart.getNextStates(), copyStart.getNextStates());
+      assertSame(digitStart.getTransition(), copyStart.getTransition());
 
     }
 }
