@@ -25,13 +25,41 @@ public class DFATable {
 		populateDfaTable(this);
 	}
 	
+	public DFATable(List<DFAState> currState,
+	List<Set<Character>> input,
+	List<DFAState> nextState,
+	List<Boolean> isStartState,
+	List<Boolean> isAcceptState){
+		this.currState = currState;
+		this.input = input;
+		this.nextState = nextState;
+		this.isStartState = isStartState;
+		this.isAcceptState = isAcceptState;
+	}
+	
+	public List getCurrState(){
+		return currState;
+	}
+	public List getInput(){
+		return input;
+	}
+	public List getNextState(){
+		return nextState;
+	}
+	public List getStartState(){
+		return isStartState;
+	}
+	public List getAcceptState(){
+		return isAcceptState;
+	}
+	
 	public void populateDfaTable(DFATable dfaTable) {
 		DFAState curr = dfa.getStartState();
 		visited.add(dfa.getStartState());
 		
 		for(DFAState next : curr.getNextStates()) {
 			currState.add(curr);
-			input.add(curr.getTransition());
+			input.add(next.getTransition());
 			nextState.add(next);
 			isStartState.add(curr.getIsStart());
 			isAcceptState.add(curr.getAccept());
@@ -43,7 +71,7 @@ public class DFATable {
 	public void explore(DFAState state) {
 		visited.add(state);
 		
-		if(state.getNextStates() == null) {
+		if(state.getNextStates().isEmpty()) {
 			currState.add(state);
 			input.add(null);
 			nextState.add(null);
