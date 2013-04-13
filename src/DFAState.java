@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -76,6 +75,12 @@ public class DFAState {
 		return new Builder();
 	}
 	
+	/**
+	 * Returns the next state given a Character input 
+	 * 
+	 * @param c Character input to be found in a transition
+	 * @return State given the provided character input
+	 */
 	public DFAState next(Character c) {
 		DFAState nextState = null;
 		
@@ -88,6 +93,12 @@ public class DFAState {
 		return nextState;
 	}
 	
+	/**
+	 * Returns the next state given a Set<Character> input
+	 * 
+	 * @param charSet A character set to be found in an adjacent transition
+	 * @return 
+	 */
 	public DFAState next(Set<Character> charSet) {
 		DFAState nextState = null;
 		

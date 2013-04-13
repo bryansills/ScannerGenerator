@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -59,8 +58,7 @@ public class DFA {
 	/**
 	 * A recursive helper method for nfaToDfa
 	 * 
-	 * @param focus
-	 * @return
+	 * @param state A pointer to the state currently being looked at
 	 */
 	public void explore(NFAState state) {
 		visited.add(state);
