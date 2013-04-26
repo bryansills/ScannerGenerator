@@ -135,7 +135,7 @@ public class ScannerGenerator {
           }
         }
       }
-      System.out.println(acceptedNfa + " " + s.substring(0, lastAccept));
+      out.println(acceptedNfa + " " + s.substring(0, lastAccept));
       s = s.substring(lastAccept);
     }
   }
