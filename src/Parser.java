@@ -43,26 +43,38 @@ public class Parser {
 					}
 				}
 				
-				for(String element : terminalsAndIds) {
-					if(element.matches(".*[A-Z]+.*")) {
+				for(int j = 0; j < terminalsAndIds.size(); j++){
+					if(terminalsAndIds.get(j).substring(0,1).matches("[A-Z]")) {
+						for(Identifier id : identifiers) {
+							if(!id.equals(terminalsAndIds.get(j)))
+								identifiers.add(new Identifier(terminalsAndIds.get(j)));
+								terminalsAndIds.remove(terminalsAndIds.get(j));
+						}
+					}
+					else {
+						terminals.add(new Terminal(terminalsAndIds.get(j)));
+						terminalsAndIds.remove(terminalsAndIds.get(j));
+					}
+					
+					/*if(element.matches(".*[A-Z]+.*")) {
 						identifiers.add(new Identifier(element));
 					}
 					else {
 						terminals.add(new Terminal(element));
-					}
+					}*/
 				}
-				
-				for(Identifier id : identifiers) {
-					System.out.println(id.getText());
-				}
-				
-				/*for(Terminal t : terminals) {
-					System.out.println(t.getText());
-				}*/
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		for(Identifier id : identifiers) {
+			System.out.println(id.getText());
+		}
+		
+		/*for(Terminal t : terminals) {
+			System.out.println(t.getText());
+		}*/
 		
 		/*for(NonTerminal non : nonTerminals) {
 			for(String s : non.getContents())
