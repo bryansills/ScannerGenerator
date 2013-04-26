@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Stack;
 
 public class ScannerGenerator {
 
@@ -63,7 +64,7 @@ public class ScannerGenerator {
           "OutputTokens.txt")));
 
       for (String input : inputs) {
-        String[] toks = input.split(" ");
+        List<String> toks = breakLine(input, new char[]{'"', '[', '\''}, new char[]{'"', ']', '\''});
         for (String t : toks) {
           walk(t, regMap, out);
         }
@@ -82,20 +83,60 @@ public class ScannerGenerator {
     }
   }
 
+  private static List<String> breakLine(String s, char[] open, char[] close) {
+    List<String> tokens = new ArrayList<String>();
+    Map<Character, Character> braces = new HashMap<Character, Character>();
+    for (int i = 0; i < open.length; i++) {
+      braces.put(open[i], close[i]);
+    }
+    Stack<Character> stack = new Stack<Character>();
+    String tok = "";
+    char[] chars = s.toCharArray();
+    for (int i = 0; i < chars.length; i++) {
+      char c = chars[i];
+      if (braces.containsValue(c) && !stack.empty()) {
+        if (braces.get(stack.peek()).equals(c)) {
+          stack.pop();
+        }
+      } else if (braces.containsKey(c)) {
+        stack.push(c);
+      }
+
+      if (c == ' ' || i == chars.length - 1) {
+        if (stack.empty()) {
+          if (c != ' ') {
+            tok += c;
+          }
+          tokens.add(tok);
+          tok = "";
+        } else {
+          tok += c;
+        }
+      } else {
+        tok += c;
+      }
+    }
+
+
+
+    return tokens;
+  }
   private static void walk(String s, Map<String, NFA> map, PrintWriter out) {
-    if (s.length() > 0) {
-      boolean accepted = false;
-      for (Entry<String, NFA> nfa : map.entrySet()) {
-        if (nfa.getValue().accepts(s)) {
-          out.println(nfa.getKey().substring(1) + " " + s);
-          accepted = true;
-          break;
+    while (s.length() > 0) {
+      String acceptedNfa = "";
+      int lastAccept = -1;
+      String sub = "";
+      for (int i = 1; i <= s.length(); i++) {
+        sub = s.substring(0, i);
+        for (Entry<String, NFA> nfa : map.entrySet()) {
+          if (nfa.getValue().accepts(sub)) {
+            lastAccept = i;
+            acceptedNfa = nfa.getKey().substring(1);
+          }
         }
       }
-      if (!accepted) {
-        walk(s.substring(0, 1), map, out);
-        walk(s.substring(1), map, out);
-      }
+      System.out.println(acceptedNfa + " " + s.substring(0, lastAccept));
+      s = s.substring(lastAccept);
     }
   }
 
