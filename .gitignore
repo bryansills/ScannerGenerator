@@ -1,6 +1,10 @@
-*.class
+bin/
+docs/
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Eclipse stuff
+.classpath
+.project
+.settings
+
+# IntelliJ stuff
+*.iml
