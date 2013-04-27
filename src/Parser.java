@@ -22,46 +22,48 @@ public class Parser {
 			
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
-				char[] chars = s.toCharArray();
+				
+				/* Pull out nonterminals on left-hand side */
 				NonTerminal nt = new NonTerminal();
-				int i = 0;
-				while(chars[i] != '>') {
-					nt.addToText(chars[i++]);
-				}
-				nt.addToText('>');
+				
+				String[] ruleDivided = s.split("::=");
+				nt.setText(ruleDivided[0].trim());
+				nt.setContents(ruleDivided[1].split("\\|"));
+				
 				nonTerminals.add(nt);
 				
-				String secondHalf = String.valueOf(chars).split("::=")[1];
-				nt.setContents(secondHalf.split("\\|"));
-				
+				/* Tokenize terminals and IDs on right-hand side, 
+				 * disregarding nonterminals */
 				for(String content : nt.getContents()) {
-					String[] temp = content.split(" ");
-					for(String termOrId : temp) {
+					String[] contentsTrimmed = content.split(" ");
+					for(String termOrId : contentsTrimmed) {
 						if(!termOrId.contains("<") && (termOrId.length() > 0)) {
 							terminalsAndIds.add(termOrId);
 						}
 					}
 				}
 				
-				for(int j = 0; j < terminalsAndIds.size(); j++){
-					if(terminalsAndIds.get(j).substring(0,1).matches("[A-Z]")) {
-						for(Identifier id : identifiers) {
-							if(!id.equals(terminalsAndIds.get(j)))
-								identifiers.add(new Identifier(terminalsAndIds.get(j)));
-								terminalsAndIds.remove(terminalsAndIds.get(j));
+				/* Separate terminals and IDs */
+				while(terminalsAndIds.iterator().hasNext()) {
+					String sId = terminalsAndIds.iterator().next();
+					if(sId.substring(0,1).matches("[A-Z]")) {
+						if(identifiers.size() > 0) {
+							for(Identifier id : identifiers) {
+								if(!id.getText().equals(sId)) {
+									identifiers.add(new Identifier(sId));
+									terminalsAndIds.remove(0);
+								}
+							}
+						}
+						else {
+							identifiers.add(new Identifier(sId));
+							terminalsAndIds.remove(0);
 						}
 					}
 					else {
-						terminals.add(new Terminal(terminalsAndIds.get(j)));
-						terminalsAndIds.remove(terminalsAndIds.get(j));
+						terminals.add(new Terminal(sId));
+						terminalsAndIds.remove(0);
 					}
-					
-					/*if(element.matches(".*[A-Z]+.*")) {
-						identifiers.add(new Identifier(element));
-					}
-					else {
-						terminals.add(new Terminal(element));
-					}*/
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -71,28 +73,6 @@ public class Parser {
 		for(Identifier id : identifiers) {
 			System.out.println(id.getText());
 		}
-		
-		/*for(Terminal t : terminals) {
-			System.out.println(t.getText());
-		}*/
-		
-		/*for(NonTerminal non : nonTerminals) {
-			for(String s : non.getContents())
-				System.out.println(s);
-		}*/
-		
-		/*for(String element : terminalsAndIds) {
-			System.out.println(element);
-		}*/
-	}
-	
-	public boolean nonTerminalsContains(NonTerminal nt) {
-		for(NonTerminal n : nonTerminals) {
-			if(n.getText().equals(nt.getText()))
-				return true;
-		}
-		
-		return false;
 	}
 	
 	public static void main(String[] args) {
