@@ -43,17 +43,24 @@ public class Parser {
 					}
 				}
 				
-				/* Separate terminals and IDs */
-				while(terminalsAndIds.iterator().hasNext()) {
-					String sId = terminalsAndIds.iterator().next();
+				while(!terminalsAndIds.isEmpty()) {
+					String sId = terminalsAndIds.get(0);
 					if(sId.substring(0,1).matches("[A-Z]")) {
 						if(identifiers.size() > 0) {
-							for(Identifier id : identifiers) {
-								if(!id.getText().equals(sId)) {
-									identifiers.add(new Identifier(sId));
-									terminalsAndIds.remove(0);
-								}
+							List<Identifier> idList = new ArrayList<Identifier>(identifiers);
+							int i = 0;
+							boolean contains = false;
+							while(i < idList.size()) {
+								if(idList.get(i).getText().equals(sId))
+									contains = true;
+								
+								i++;
 							}
+							
+							if(!contains)
+								identifiers.add(new Identifier(sId));
+							
+							terminalsAndIds.remove(0);
 						}
 						else {
 							identifiers.add(new Identifier(sId));
@@ -61,17 +68,25 @@ public class Parser {
 						}
 					}
 					else {
-						terminals.add(new Terminal(sId));
+						List<Terminal> tList = new ArrayList<Terminal>(terminals);
+						int i = 0;
+						boolean contains = false;
+						while(i < tList.size()) {
+							if(tList.get(i).getText().equals(sId))
+								contains = true;
+								
+							i++;
+						}
+						
+						if(!contains)
+							terminals.add(new Terminal(sId));
+						
 						terminalsAndIds.remove(0);
 					}
 				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		
-		for(Identifier id : identifiers) {
-			System.out.println(id.getText());
 		}
 	}
 	

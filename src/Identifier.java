@@ -15,4 +15,7 @@ public class Identifier {
 		this.text = text;
 	}
 
+	public String toString() {
+		return getText();
+	}
 }
