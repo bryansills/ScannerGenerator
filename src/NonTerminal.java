@@ -27,9 +27,9 @@ public class NonTerminal extends Symbol {
 	public NonTerminal(String text, boolean isStart) {
 		super(text);
 	}
-
-	public String toString() {
-		return super.toString();
+	
+	public List<Rule> getRules() {
+		return rules;
 	}
 	
 	public void addRule(Rule rule) {
@@ -37,7 +37,7 @@ public class NonTerminal extends Symbol {
 			rules.add(rule);
 	}
 
-	public List<Rule> getRules() {
-		return rules;
+	public String toString() {
+		return super.toString();
 	}
 }

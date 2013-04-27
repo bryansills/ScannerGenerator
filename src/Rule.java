@@ -23,4 +23,22 @@ public class Rule {
 	public List<Symbol> getRule() {
 		return rule;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = true;
+		
+		/* Special size cases */
+		if((this.getRule().size() == 0) && (((Rule)o).getRule().size() == 0))
+			return true;
+		else if((this.getRule().size() == 0) ^ (((Rule)o).getRule().size() == 0))
+			return false;
+		
+		for(int i = 0; i < this.getRule().size(); i++) {
+			if(this.getRule().get(i).getText() != ((Rule)o).getRule().get(i).getText())
+				return false;
+		}
+		
+		return equals;
+	}
 }
