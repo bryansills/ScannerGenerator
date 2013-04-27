@@ -1,18 +1,8 @@
 
-public class Terminal {
+public class Terminal extends Token {
 	
-	private String text = "";
-
 	public Terminal(String text) {
-		this.text = text;
-	}
-	
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+		super(text);
 	}
 	
 	public String toString() {
