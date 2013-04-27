@@ -24,6 +24,9 @@ public class Rule {
 		return rule;
 	}
 	
+	/**
+	 * Compares rules based on the text of all of their symbols
+	 */
 	@Override
 	public boolean equals(Object o) {
 		boolean equals = true;
