@@ -10,4 +10,8 @@ public class Token extends Symbol{
 	public Token(String text) {
 		super(text);
 	}
+	
+	public String toString() {
+		return super.toString();
+	}
 }

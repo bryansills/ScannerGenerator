@@ -6,6 +6,6 @@ public class Identifier extends Token {
 	}
 
 	public String toString() {
-		return getText();
+		return super.toString();
 	}
 }

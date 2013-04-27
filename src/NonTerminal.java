@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class NonTerminal extends Symbol {
 	
-	private List<String> contents = new ArrayList<String>();
+	private List<Rule> rules = new ArrayList<Rule>();
 	
 	private boolean isStart;
 	
@@ -32,26 +32,19 @@ public class NonTerminal extends Symbol {
 	}
 
 	public String toString() {
-		return getText();
+		return super.toString();
 	}
 	
-	public List<String> getContents() {
-		return contents;
+	public void addRule(Rule rule) {
+		if(!rules.contains(rule))
+			rules.add(rule);
 	}
 
-	public void setContents(List<String> contents) {
-		this.contents = contents;
+	public List<Rule> getRules() {
+		return rules;
 	}
-	
-	public void setContents(String[] contentList) {
-		contents = new ArrayList<String>();
-		
-		for(String content : contentList) {
-			contents.add(content);
-		}
-	}
-	
-	public void removeFromContents(String content) {
-		contents.remove(content);
+
+	public void setRules(List<Rule> rules) {
+		this.rules = rules;
 	}
 }

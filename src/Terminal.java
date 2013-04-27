@@ -6,7 +6,7 @@ public class Terminal extends Token {
 	}
 	
 	public String toString() {
-		return getText();
+		return super.toString();
 	}
 
 }

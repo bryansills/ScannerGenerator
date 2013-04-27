@@ -8,11 +8,8 @@ import java.util.Set;
 
 public class Parser {
 	
-	Set<Terminal> terminals = new HashSet<Terminal>();
 	Set<NonTerminal> nonTerminals = new HashSet<NonTerminal>();
-	Set<Identifier> identifiers = new HashSet<Identifier>();
-	
-	List<String> terminalsAndIds = new ArrayList<String>();
+	List<Token> tokens = new ArrayList<Token>();
 	
 	public Parser() {
 		File inFile = new File("grammar.txt");
@@ -23,54 +20,14 @@ public class Parser {
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
 				
+				//TODO: set isStart
+				
 				/* Pull out nonterminals on left-hand side */
 				NonTerminal nt = tokenizeLeftHandSide(s);
 				
 				/* Tokenize terminals and IDs on right-hand side, 
 				 * disregarding nonterminals */
-				tokenizeRightHandSide(nt);
-				
-				while(!terminalsAndIds.isEmpty()) {
-					String sId = terminalsAndIds.get(0);
-					if(sId.substring(0,1).matches("[A-Z]")) {
-						if(identifiers.size() > 0) {
-							List<Identifier> idList = new ArrayList<Identifier>(identifiers);
-							int i = 0;
-							boolean contains = false;
-							while(i < idList.size()) {
-								if(idList.get(i).getText().equals(sId))
-									contains = true;
-								
-								i++;
-							}
-							
-							if(!contains)
-								identifiers.add(new Identifier(sId));
-							
-							terminalsAndIds.remove(0);
-						}
-						else {
-							identifiers.add(new Identifier(sId));
-							terminalsAndIds.remove(0);
-						}
-					}
-					else {
-						List<Terminal> tList = new ArrayList<Terminal>(terminals);
-						int i = 0;
-						boolean contains = false;
-						while(i < tList.size()) {
-							if(tList.get(i).getText().equals(sId))
-								contains = true;
-								
-							i++;
-						}
-						
-						if(!contains)
-							terminals.add(new Terminal(sId));
-						
-						terminalsAndIds.remove(0);
-					}
-				}
+				tokenizeRules(nt);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -78,6 +35,9 @@ public class Parser {
 		
 		for(NonTerminal nont : nonTerminals)
 			System.out.println(nont);
+		
+		for(Token toke : tokens)
+			System.out.println(toke);
 	}
 	
 	/**
@@ -91,19 +51,31 @@ public class Parser {
 		
 		String[] ruleDivided = s.split("::=");
 		nt.setText(ruleDivided[0].trim());
-		nt.setContents(ruleDivided[1].split("\\|"));
+		for(String ruleStr : ruleDivided[1].split("\\|")) {
+			nt.addRule(new Rule(ruleStr.split(" ")));
+		}
 		
 		nonTerminals.add(nt);
 		
 		return nt;
 	}
 	
-	public void tokenizeRightHandSide(NonTerminal nt) {
-		for(String content : nt.getContents()) {
-			String[] contentsTrimmed = content.split(" ");
-			for(String termOrId : contentsTrimmed) {
-				if(!termOrId.contains("<") && (termOrId.length() > 0)) {
-					terminalsAndIds.add(termOrId);
+	public void tokenizeRules(NonTerminal nt) {
+		for(Rule r : nt.getRules()) {
+			for(Symbol sym : r.getRule()) {
+				if(!sym.getText().contains("<") && (sym.getText().length() > 0)) {
+					int i = 0;
+					boolean contains = false;
+					
+					while(i < tokens.size()) {
+						if(tokens.get(i).getText().equals(sym.getText()))
+							contains = true;
+						
+						i++;
+					}
+					
+					if(!contains)
+						tokens.add(new Token(sym.getText()));
 				}
 			}
 		}
