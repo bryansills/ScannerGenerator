@@ -8,8 +8,11 @@ public class Rule {
 
 	public Rule(String[] ruleStr) {
 		rule = new ArrayList<Symbol>();
-		for(String sym : ruleStr)
-			rule.add(new Symbol(sym.trim()));
+		for(String sym : ruleStr) {
+			String trimSym = sym.trim();
+			if(trimSym.length() > 0)
+				rule.add(new Symbol(trimSym));
+		}
 	}
 	
 	public List<Symbol> getRule() {

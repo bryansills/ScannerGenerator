@@ -19,9 +19,7 @@ public class Parser {
 			
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
-				
-				//TODO: set isStart
-				
+
 				/* Pull out nonterminals on left-hand side */
 				NonTerminal nt = tokenizeLeftHandSide(s);
 				
@@ -55,7 +53,28 @@ public class Parser {
 			nt.addRule(new Rule(ruleStr.split(" ")));
 		}
 		
-		nonTerminals.add(nt);
+		int i = 0;
+		boolean contains = false;
+		List<NonTerminal> ntList = new ArrayList<NonTerminal>(nonTerminals);
+		
+		if(nonTerminals.size() > 0) {
+			while(i < ntList.size() && !contains) {
+				if(ntList.get(i).getText().equals(nt.getText())) {
+					contains = true;
+					for(Rule r : nt.getRules())
+						ntList.get(i).addRule(r);
+				}
+				
+				i++;				
+			}
+			
+			if(!contains)
+				nonTerminals.add(nt);
+		}
+		else {
+			nonTerminals.add(nt);
+		}
+		
 		
 		return nt;
 	}
@@ -79,19 +98,6 @@ public class Parser {
 				}
 			}
 		}
-	}
-	
-	/**
-	 * Iterates through nonTerminals and returns the start nonterminal.
-	 * Returns null if no start nonterminal is found.
-	 */
-	public NonTerminal getStartNonTerminal() {
-		for(NonTerminal nt : nonTerminals) {
-			if(nt.isStart())
-				return nt;
-		}
-		
-		return null;
 	}
 	
 	public static void main(String[] args) {
