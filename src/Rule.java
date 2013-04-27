@@ -34,7 +34,7 @@ public class Rule {
 		/* Special size cases */
 		if((this.getRule().size() == 0) && (((Rule)o).getRule().size() == 0))
 			return true;
-		else if((this.getRule().size() == 0) ^ (((Rule)o).getRule().size() == 0))
+		else if((this.getRule().size() == 0) != (((Rule)o).getRule().size() == 0))
 			return false;
 		
 		for(int i = 0; i < this.getRule().size(); i++) {
