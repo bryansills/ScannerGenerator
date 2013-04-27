@@ -46,7 +46,24 @@ public class Parser {
 		String[] ruleDivided = s.split("::=");
 		nt.setText(ruleDivided[0].trim());
 		for(String ruleStr : ruleDivided[1].split("\\|")) {
-			nt.addRule(new Rule(ruleStr.split(" ")));
+			Rule r = new Rule();
+			nt.addRule(r);
+			for(int i = 0; i < ruleStr.length(); i++) {
+				if((ruleStr.charAt(i) == '<') && (ruleStr.length() > 0)) {
+					String ntTemp = "";
+					while(ruleStr.charAt(i) != '>') {
+						ntTemp += ruleStr.charAt(i);
+						i++;
+					}
+					ntTemp += '>';
+					r.addToRule(ntTemp);
+				}
+			}
+			String[] splitSpace = ruleStr.split(" ");
+			for(String spaces : splitSpace) {
+				if(!spaces.contains("<") && (spaces.length() > 0))
+					r.addToRule(spaces);
+			}
 		}
 		
 		int i = 0;

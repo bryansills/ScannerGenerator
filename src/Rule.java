@@ -10,6 +10,10 @@ import java.util.List;
 public class Rule {
 	
 	List<Symbol> rule;
+	
+	public Rule() {
+		rule = new ArrayList<Symbol>();
+	}
 
 	public Rule(String[] ruleStr) {
 		rule = new ArrayList<Symbol>();
@@ -22,6 +26,10 @@ public class Rule {
 	
 	public List<Symbol> getRule() {
 		return rule;
+	}
+	
+	public void addToRule(String s) {
+		rule.add(new Symbol(s));
 	}
 	
 	/**
