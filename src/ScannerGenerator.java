@@ -41,6 +41,7 @@ public class ScannerGenerator {
       Map<String, Set<Character>> classes = CharClasses
           .buildMapFromSpec(classSpec);
 
+
       Map<String, NFA> nfas = new HashMap<String, NFA>();
       for (Entry<String, Set<Character>> entry : classes.entrySet()) {
         nfas.put(entry.getKey(), new NFA(entry.getValue()));
@@ -50,6 +51,17 @@ public class ScannerGenerator {
       for (String regex : spec) {
         String[] temp = regex.split(" ", 2);
         regMap.put(temp[0], rd(temp[1], nfas));
+      }
+
+      // later
+      for (Entry<String, NFA> nfa : regMap.entrySet()) {
+        nfa.getValue().getEnd().setName(nfa.getKey());
+      }
+
+      for (NFA nfa : regMap.values()) {
+        System.out.println(nfa.getEnd().getName() + " " + nfa.getEnd().isAccept());
+        System.out.println("End state: " + nfa.getEnd().getId());
+        System.out.println(nfa);
       }
 
       // read in input file
@@ -69,6 +81,12 @@ public class ScannerGenerator {
           walk(t, regMap, out);
         }
       }
+
+      /*for (Entry<String, NFA> nfa : regMap.entrySet()) {
+        System.out.println(nfa.getKey() + " = " + nfa.getValue() + "\n\n");
+      }*/
+      //System.out.println(regMap.get("$IDENTIFIER"));
+      MyDFA.removeEpsilon(regMap.get("$IDENTIFIER").getStartState());
 
       out.close();
     } catch (FileNotFoundException e) {
@@ -135,7 +153,7 @@ public class ScannerGenerator {
           }
         }
       }
-      out.println(acceptedNfa + " " + s.substring(0, lastAccept));
+      System.out.println(acceptedNfa + " " + s.substring(0, lastAccept));
       s = s.substring(lastAccept);
     }
   }

@@ -14,9 +14,10 @@ import java.util.Stack;
  */
 public class NFA {
   private NFAState start;
+  private NFAState end;
 
   public NFA() {
-    this.start = NFAState.builder()
+    this.start = this.end = NFAState.builder()
         .build();
   }
 
@@ -33,6 +34,7 @@ public class NFA {
         .setTransition(null) // empty transition.
         .addNextState(acceptState)
         .build();
+    end = acceptState;
   }
 
 
@@ -67,6 +69,8 @@ public class NFA {
 
   	return acceptStates;
   }
+
+
   public NFA copy() {
     NFA copy = new NFA();
     Map<NFAState, NFAState> oldToNew = new HashMap<NFAState, NFAState>();
@@ -103,6 +107,7 @@ public class NFA {
     }
 
     copy.setStartState(oldToNew.get(start));
+    copy.setEnd(oldToNew.get(end));
     return copy;
   }
 
@@ -142,5 +147,16 @@ public class NFA {
   public NFA setStartState(NFAState start) {
   	this.start = start;
     return this;
+  }
+  public NFAState getEnd() {
+    return end;
+  }
+
+  public void setEnd(NFAState end) {
+    this.end = end;
+  }
+  @Override
+  public String toString() {
+    return start.toString();
   }
 }

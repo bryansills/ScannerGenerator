@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 
@@ -11,6 +14,7 @@ public class NFAState {
     private List<NFAState> nextStates;
     private boolean accept;
     private boolean visited;
+    private String name;
 
     public Builder() {
       nextStates = new ArrayList<NFAState>();
@@ -45,22 +49,32 @@ public class NFAState {
       return this;
     }
 
+    private Builder setName(String name) {
+      this.name = name;
+      return this;
+    }
+
     public NFAState build() {
       return new NFAState(this);
     }
 
   }
 
+  private static int Count = 0;
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
   private boolean visited;
+  private int id;
+  private String name;
 
   private NFAState(Builder b) {
+    this.id = Count++;
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
     this.visited = b.visited;
+    this.name = b.name;
   }
 
   public static Builder builder() {
@@ -170,6 +184,54 @@ public class NFAState {
   public NFAState copy() {
     return NFAState.builder()
         .setAccept(accept)
+        .setName(name)
         .setTransition(transition).build();
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getId() {
+    return id;
+  }
+  public boolean equals(NFAState other) {
+    return id == other.id;
+  }
+  @Override
+  public String toString() {
+    String s = "";
+    Queue<NFAState> queue = new LinkedList<NFAState>();
+    queue.add(this);
+    Set<Integer> visited = new HashSet<Integer>();
+    visited.add(id);
+    while (!queue.isEmpty()) {
+      NFAState state = queue.remove();
+      if (state.isAccept()) {
+        s += "State: (" + state.id + ")";
+      } else {
+        s += "State: " + state.id;
+      }
+      List<NFAState> successors = state.getNextStates();
+      if (!successors.isEmpty()) {
+        s += " -> ";
+      }
+      for(NFAState next : successors) {
+        if (!visited.contains(next.id)) {
+          s += next.id + " in " + next.getTransition() + "\n";
+          queue.add(next);
+          visited.add(next.id);
+        } else {
+          s += next.id + " in " + next.getTransition() + "\n";
+        }
+      }
+    }
+
+    return s;
+
   }
 }
