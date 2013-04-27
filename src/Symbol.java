@@ -1,5 +1,5 @@
 /**
- * Nonterminals and tokens
+ * Symbol includes tokens and nonterminals.
  * 
  * @author dgreenhalgh
  */

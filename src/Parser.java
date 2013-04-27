@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * Reads a grammar and pulls out a list of nonterminals. The nonterminals keep 
+ * hold a list of rules that they are associated with.
+ * 
+ * @author dgreenhalgh
+ */
 public class Parser {
 	
 	Set<NonTerminal> nonTerminals = new HashSet<NonTerminal>();
@@ -20,22 +26,12 @@ public class Parser {
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
 
-				/* Pull out nonterminals on left-hand side */
 				NonTerminal nt = tokenizeLeftHandSide(s);
-				
-				/* Tokenize terminals and IDs on right-hand side, 
-				 * disregarding nonterminals */
 				tokenizeRules(nt);
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		for(NonTerminal nont : nonTerminals)
-			System.out.println(nont);
-		
-		for(Token toke : tokens)
-			System.out.println(toke);
 	}
 	
 	/**
@@ -75,10 +71,12 @@ public class Parser {
 			nonTerminals.add(nt);
 		}
 		
-		
 		return nt;
 	}
 	
+	/**
+	 * Tokenizes a nonterminal's rules and adds those tokens to a list
+	 */
 	public void tokenizeRules(NonTerminal nt) {
 		for(Rule r : nt.getRules()) {
 			for(Symbol sym : r.getRule()) {

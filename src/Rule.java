@@ -1,7 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * The tokenized right-hand side of a line, the rule is implemented as a list 
+ * of Symbols.
+ * 
+ * @author dgreenhalgh
+ */
 public class Rule {
 	
 	List<Symbol> rule;

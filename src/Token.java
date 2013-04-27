@@ -1,5 +1,6 @@
 /**
- * Superclass encompassing nonterminals, terminals, and identifiers.
+ * We assume that any symbol that is not a nonterminal is a token. 
+ * This includes terminals and identifiers.
  * 
  * @author dgreenhalgh
  */
