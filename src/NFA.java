@@ -133,7 +133,6 @@ public class NFA {
 
         discovered.add(temp);
     }
-
     return allStates;
   }
   public boolean accepts(String str) {
