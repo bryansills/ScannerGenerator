@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NonTerminal extends Token {
+public class NonTerminal extends Symbol {
 	
 	private List<String> contents = new ArrayList<String>();
 	

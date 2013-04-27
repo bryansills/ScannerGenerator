@@ -3,21 +3,11 @@
  * 
  * @author dgreenhalgh
  */
-public class Token {
-	
-	private String text = "";
+public class Token extends Symbol{
 	
 	public Token() {}
 	
 	public Token(String text) {
-		this.text = text;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+		super(text);
 	}
 }

@@ -24,24 +24,11 @@ public class Parser {
 				String s = in.nextLine();
 				
 				/* Pull out nonterminals on left-hand side */
-				NonTerminal nt = new NonTerminal();
-				
-				String[] ruleDivided = s.split("::=");
-				nt.setText(ruleDivided[0].trim());
-				nt.setContents(ruleDivided[1].split("\\|"));
-				
-				nonTerminals.add(nt);
+				NonTerminal nt = tokenizeLeftHandSide(s);
 				
 				/* Tokenize terminals and IDs on right-hand side, 
 				 * disregarding nonterminals */
-				for(String content : nt.getContents()) {
-					String[] contentsTrimmed = content.split(" ");
-					for(String termOrId : contentsTrimmed) {
-						if(!termOrId.contains("<") && (termOrId.length() > 0)) {
-							terminalsAndIds.add(termOrId);
-						}
-					}
-				}
+				tokenizeRightHandSide(nt);
 				
 				while(!terminalsAndIds.isEmpty()) {
 					String sId = terminalsAndIds.get(0);
@@ -88,6 +75,51 @@ public class Parser {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		for(NonTerminal nont : nonTerminals)
+			System.out.println(nont);
+	}
+	
+	/**
+	 * Tokenize nonterminals on left-hand side
+	 * 
+	 * @param s Next line in grammar
+	 * @return nt The nonterminal on line s
+	 */
+	public NonTerminal tokenizeLeftHandSide(String s) {
+		NonTerminal nt = new NonTerminal();
+		
+		String[] ruleDivided = s.split("::=");
+		nt.setText(ruleDivided[0].trim());
+		nt.setContents(ruleDivided[1].split("\\|"));
+		
+		nonTerminals.add(nt);
+		
+		return nt;
+	}
+	
+	public void tokenizeRightHandSide(NonTerminal nt) {
+		for(String content : nt.getContents()) {
+			String[] contentsTrimmed = content.split(" ");
+			for(String termOrId : contentsTrimmed) {
+				if(!termOrId.contains("<") && (termOrId.length() > 0)) {
+					terminalsAndIds.add(termOrId);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Iterates through nonTerminals and returns the start nonterminal.
+	 * Returns null if no start nonterminal is found.
+	 */
+	public NonTerminal getStartNonTerminal() {
+		for(NonTerminal nt : nonTerminals) {
+			if(nt.isStart())
+				return nt;
+		}
+		
+		return null;
 	}
 	
 	public static void main(String[] args) {
