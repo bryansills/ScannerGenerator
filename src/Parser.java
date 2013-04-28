@@ -49,6 +49,7 @@ public class Parser {
 			e.printStackTrace();
 		}
 
+
     createFirstSets(nonTerminals);
 	}
 	
@@ -79,7 +80,9 @@ public class Parser {
   public String[] tokenizeRule(String str) {
     String[] splitOnSpace = str.split(" ");
     List<String> tokenizedStrings = new ArrayList<String>();
+    List<String> finalTokenizedStrings = new ArrayList<String>();
 
+    // handle nonterminals
     for(int ii = 0; ii < splitOnSpace.length; ii++) {
       if (splitOnSpace[ii].indexOf('<') > 0) {
         String pre = splitOnSpace[ii].substring(0, splitOnSpace[ii].indexOf('<'));
@@ -88,7 +91,7 @@ public class Parser {
       }
       while (splitOnSpace[ii].contains("<")) {
         int endIndex = splitOnSpace[ii].indexOf('>');
-        String tok = splitOnSpace[ii].substring(0, endIndex);
+        String tok = splitOnSpace[ii].substring(0, endIndex + 1);
         tokenizedStrings.add(tok);
         splitOnSpace[ii] = splitOnSpace[ii].substring(splitOnSpace[ii].indexOf('>') + 1);
       }
@@ -97,7 +100,32 @@ public class Parser {
       }
     }
 
-    return tokenizedStrings.toArray(new String[tokenizedStrings.size()]);
+    // handle tokens with parens
+    for(String tok : tokenizedStrings) {
+      // splits on open and close parens, but does not loose the parens
+      String[] splitOnParen = tok.split("((?<=[()])|(?=[()]))");
+
+      String temp = "";
+      for (String parenTok : splitOnParen) {
+        if (parenTok.length() > 0) {
+          if (parenTok.matches("[^a-z()]*")) {
+            if (temp.length() > 0) {
+              finalTokenizedStrings.add(temp);
+              temp = "";
+            }
+            finalTokenizedStrings.add(parenTok);
+          } else {
+            temp += parenTok;
+          }
+        }
+      }
+
+      if (temp.length() > 0) {
+        finalTokenizedStrings.add(temp);
+      }
+    }
+
+    return finalTokenizedStrings.toArray(new String[finalTokenizedStrings.size()]);
   }
 
   /**
