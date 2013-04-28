@@ -1,5 +1,6 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -11,35 +12,31 @@ public class ParserTest {
     public void basicFirstSet() throws Exception {
 
         NonTerminal aNonTerm = new NonTerminal("<stmt-sequence>");
-        List<? extends Symbol> aRule = new ArrayList<? extends Symbol>();
-        aRule.add(new NonTerminal("<stmt>"));
-        aRule.add(new NonTerminal("<stmt-seq'>"));
-        aNonTerm.addContents(aRule);
+        Rule aRule = new Rule(new String[]{"<stmt>","<stmt-seq'>"});
+        aNonTerm.addRule(aRule);
 
         NonTerminal bNonTerm = new NonTerminal("<stmt-seq'>");
-        List<? extends Symbol> bRule = new ArrayList<? extends Symbol>();
-        bRule.add(new Terminal(";"));
-        bRule.add(new NonTerminal("<stmt-sequence>"));
-        List<? extends Symbol> bRuleTwo = new ArrayList<? extends Symbol>();
-        bRuleTwo.add(new Terminal("<epsilon>"));
-        bNonTerm.addContents(bRule);
+        Rule bRule = new Rule(new String[]{";","<stmt-sequence>"});
+        Rule bRuleTwo = new Rule(new String[]{"<epsilon>"});
+        bNonTerm.addRule(bRule);
+        bNonTerm.addRule(bRuleTwo);
 
         NonTerminal cNonTerm = new NonTerminal("<stmt>");
-        List<? extends Symbol> cRule = new ArrayList<? extends Symbol>();
-        cRule.add(new Terminal("s"));
-        cNonTerm.addContents(cRule);
+        Rule cRule = new Rule(new String[]{"s"});
+        cNonTerm.addRule(cRule);
 
-        List<NonTerminal> grammar = new ArrayList<NonTerminal>();
+        Set<NonTerminal> grammar = new HashSet<NonTerminal>();
         grammar.add(aNonTerm);
         grammar.add(bNonTerm);
         grammar.add(cNonTerm);
 
         Parser.createFirstSets(grammar);
+        Iterator<NonTerminal> iter = grammar.iterator();
 
         boolean test1 = false;
         boolean test2 = false;
         boolean test3 = false;
-        for (Symbol sym : grammar.get(0).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("s")) {
                 test1 = true;
             } else if (sym.getText().equals(";")) {
@@ -57,7 +54,7 @@ public class ParserTest {
         boolean test4 = false;
         boolean test5 = false;
         boolean test6 = false;
-        for (Symbol sym : grammar.get(1).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("s")) {
                 test4 = true;
             } else if (sym.getText().equals(";")) {
@@ -68,14 +65,14 @@ public class ParserTest {
                 throw new Exception();
             }
         }
-        assertTrue(test4);
-        assertFalse(test5);
-        assertFalse(test6);
+        assertFalse(test4);
+        assertTrue(test5);
+        assertTrue(test6);
 
         boolean test7 = false;
         boolean test8 = false;
         boolean test9= false;
-        for (Symbol sym : grammar.get(2).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("s")) {
                 test7 = true;
             } else if (sym.getText().equals(";")) {
@@ -86,53 +83,44 @@ public class ParserTest {
                 throw new Exception();
             }
         }
-        assertFalse(test7);
-        assertTrue(test8);
-        assertTrue(test9);
+        assertTrue(test7);
+        assertFalse(test8);
+        assertFalse(test9);
     }
 
     @Test
-    public static void anotherFirstSet() {
+    public void anotherFirstSet() throws Exception {
 
         NonTerminal aNonTerm = new NonTerminal("<statement>");
-        List<? extends Symbol> aRule = new ArrayList<? extends Symbol>();
-        aRule.add(new NonTerminal("<if-stmt>"));
-        List<? extends Symbol> aRuleTwo = new ArrayList<? extends Symbol>();
-        aRuleTwo.add(new Terminal("other"));
-        aNonTerm.addContents(aRule);
+        Rule aRule = new Rule(new String[]{"<if-stmt>"});
+        Rule aRuleTwo = new Rule(new String[]{"other"});
+        aNonTerm.addRule(aRule);
+        aNonTerm.addRule(aRuleTwo);
 
         NonTerminal bNonTerm = new NonTerminal("<if-stmt>");
-        List<? extends Symbol> bRule = new ArrayList<? extends Symbol>();
-        bRule.add(new Terminal("if"));
-        bRule.add(new Terminal("("));
-        bRule.add(new NonTerminal("<exp>"));
-        bRule.add(new Terminal(")"));
-        bRule.add(new NonTerminal("<statement>"));
-        bRule.add(new NonTerminal("<else-part>"));
-        bNonTerm.addContents(bRule);
+        Rule bRule = new Rule(new String[]{"if", "(", "<exp>", ")", "<statement>", "<else-part>"});
+        bNonTerm.addRule(bRule);
 
         NonTerminal cNonTerm = new NonTerminal("<else-part>");
-        List<? extends Symbol> cRule = new ArrayList<? extends Symbol>();
-        cRule.add(new Terminal("else"));
-        cRule.add(new NonTerminal("<statement>"));
-        List<? extends Symbol> cRuleTwo = new ArrayList<? extends Symbol>();
-        cRuleTwo.add(new Terminal("<epsilon>"));
-        cNonTerm.addContents(cRule);
+        Rule cRule = new Rule(new String[]{"else", "<statement>"});
+        Rule cRuleTwo = new Rule(new String[]{"<epsilon>"});
+        cNonTerm.addRule(cRule);
+        cNonTerm.addRule(cRuleTwo);
 
         NonTerminal dNonTerm = new NonTerminal("<exp>");
-        List<? extends Symbol> dRule = new ArrayList<? extends Symbol>();
-        dRule.add(new Terminal("0"));
-        List<? extends Symbol> dRuleTwo = new ArrayList<? extends Symbol>();
-        dRuleTwo.add(new Terminal("1"));
-        dNonTerm.addContents(dRule);
+        Rule dRule = new Rule(new String[]{"0"});
+        Rule dRuleTwo = new Rule(new String[]{"1"});
+        dNonTerm.addRule(dRule);
+        dNonTerm.addRule(dRuleTwo);
 
-        List<NonTerminal> grammar = new ArrayList<NonTerminal>();
+        Set<NonTerminal> grammar = new HashSet<NonTerminal>();
         grammar.add(aNonTerm);
         grammar.add(bNonTerm);
         grammar.add(cNonTerm);
         grammar.add(dNonTerm);
 
         Parser.createFirstSets(grammar);
+        Iterator<NonTerminal> iter = grammar.iterator();
 
         boolean test1 = false;
         boolean test2 = false;
@@ -140,7 +128,7 @@ public class ParserTest {
         boolean test4 = false;
         boolean test5 = false;
         boolean test6 = false;
-        for (Symbol sym : grammar.get(0).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("if")) {
                 test1 = true;
             } else if (sym.getText().equals("other")) {
@@ -170,7 +158,7 @@ public class ParserTest {
         boolean test10 = false;
         boolean test11 = false;
         boolean test12 = false;
-        for (Symbol sym : grammar.get(1).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("if")) {
                 test7 = true;
             } else if (sym.getText().equals("other")) {
@@ -200,7 +188,7 @@ public class ParserTest {
         boolean test16 = false;
         boolean test17 = false;
         boolean test18 = false;
-        for (Symbol sym : grammar.get(2).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("if")) {
                 test13 = true;
             } else if (sym.getText().equals("other")) {
@@ -220,9 +208,9 @@ public class ParserTest {
         assertFalse(test13);
         assertFalse(test14);
         assertTrue(test15);
-        assertTrue(test16);
+        assertFalse(test16);
         assertFalse(test17);
-        assertFalse(test18);
+        assertTrue(test18);
 
         boolean test19 = false;
         boolean test20 = false;
@@ -230,7 +218,7 @@ public class ParserTest {
         boolean test22 = false;
         boolean test23 = false;
         boolean test24 = false;
-        for (Symbol sym : grammar.get(3).getFirstSet()) {
+        for (Symbol sym : iter.next().getFirstSet()) {
             if (sym.getText().equals("if")) {
                 test19 = true;
             } else if (sym.getText().equals("other")) {
@@ -250,9 +238,9 @@ public class ParserTest {
         assertFalse(test19);
         assertFalse(test20);
         assertFalse(test21);
-        assertFalse(test22);
+        assertTrue(test22);
         assertTrue(test23);
-        assertTrue(test24);
+        assertFalse(test24);
 
     }
 }
