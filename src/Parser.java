@@ -265,17 +265,15 @@ public class Parser {
 		Parser p = new Parser();
 
 		for (NonTerminal nt : p.nonTerminals) {
-		  for (Rule r : nt.getRules()) {
-		    System.out.printf("%s -> %s\n", nt.toString(), r.toString());
-		  }
+		  System.out.println(nt);
 		}
 
 		for (NonTerminal nt : p.nonTerminals) {
-		  System.out.printf("First(%s) = %s\n", nt.toString(), nt.firstSet.toString());
+		  System.out.printf("First(%s) = %s\n", nt.getText(), nt.firstSet.toString());
 		}
 		System.out.println();
 		for (NonTerminal nt : p.nonTerminals) {
-		  System.out.printf("Follow(%s) = %s\n", nt.toString(), nt.followSet.toString());
+		  System.out.printf("Follow(%s) = %s\n", nt.getText(), nt.followSet.toString());
 		}
 	}
 }

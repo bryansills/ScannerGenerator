@@ -64,6 +64,10 @@ public class NonTerminal extends Symbol {
 
 	@Override
   public String toString() {
-		return super.toString();
+	  String s = "";
+		for (Rule r : rules) {
+		    s += String.format("%s -> %s\n", getText(), r.toString());
+		}
+		return s;
 	}
 }
