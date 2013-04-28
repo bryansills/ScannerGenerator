@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The tokenized right-hand side of a line, the rule is implemented as a list 
+ * The tokenized right-hand side of a line, the rule is implemented as a list
  * of Symbols.
- * 
+ *
  * @author dgreenhalgh
  */
 public class Rule {
-	
+
 	List<Symbol> rule;
-	
+
 	public Rule() {
 		rule = new ArrayList<Symbol>();
 	}
@@ -32,15 +32,19 @@ public class Rule {
       }
 		}
 	}
-	
+
 	public List<Symbol> getRule() {
 		return rule;
 	}
-	
+
 	public void addToRule(String s) {
 		rule.add(new Symbol(s));
 	}
-	
+
+	@Override
+  public String toString() {
+	  return rule.toString();
+	}
 	/**
 	 * Compares rules based on the text of all of their symbols
 	 */
@@ -52,18 +56,18 @@ public class Rule {
     if (o == null || !(o instanceof Rule)) {
       return false;
     }
-		
+
 		/* Special size cases */
 		if((this.getRule().size() == 0) && (((Rule)o).getRule().size() == 0))
 			return true;
 		else if((this.getRule().size() == 0) != (((Rule)o).getRule().size() == 0))
 			return false;
-		
+
 		for(int i = 0; i < this.getRule().size(); i++) {
 			if(this.getRule().get(i).getText() != ((Rule)o).getRule().get(i).getText())
 				return false;
 		}
-		
+
 		return equals;
 	}
 }

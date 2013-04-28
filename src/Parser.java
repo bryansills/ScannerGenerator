@@ -1,28 +1,28 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 /**
- * Reads a grammar and pulls out a list of nonterminals. The nonterminals keep 
+ * Reads a grammar and pulls out a list of nonterminals. The nonterminals keep
  * hold a list of rules that they are associated with.
- * 
+ *
  * @author dgreenhalgh
  */
 public class Parser {
-	
-	Set<NonTerminal> nonTerminals = new HashSet<NonTerminal>();
+
+	Set<NonTerminal> nonTerminals = new LinkedHashSet<NonTerminal>();
 	List<Token> tokens = new ArrayList<Token>();
-	
+
 	public Parser() {
 		File inFile = new File("grammar.txt");
-		
+
 		try {
 			Scanner in = new Scanner(inFile);
-			
+
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
 
@@ -52,23 +52,23 @@ public class Parser {
 
     createFirstSets(nonTerminals);
 	}
-	
+
 	/**
 	 * Parses the string and creates a nonterminal out of the contents
-	 * 
+	 *
 	 * @param s Next line in grammar
 	 * @return nt The nonterminal on line s
 	 */
 	public NonTerminal parseLine(String s) {
 		NonTerminal nt = new NonTerminal();
-		
+
 		String[] ruleDivided = s.split("::=");
 		nt.setText(ruleDivided[0].trim());
 		for(String ruleStr : ruleDivided[1].split("\\|")) {
       String[] ruleToken = tokenizeRule(ruleStr.trim());
       nt.addRule(new Rule(ruleToken));
 		}
-		
+
 		return nt;
 	}
 
@@ -141,7 +141,7 @@ public class Parser {
               contains = true;
             }
 					}
-					
+
 					if(!contains) {
 						tokens.add((Token) sym);
           }
@@ -248,8 +248,32 @@ public class Parser {
       }
     }
   }
-	
+
+
+  public static void createFollowSet(Set<NonTerminal> nonTerminals) {
+    NonTerminal start = nonTerminals.iterator().next();
+    start.addToFollowSet(new Token("$"));
+    boolean changed = false;
+    do {
+	    for (NonTerminal nt : nonTerminals) {
+
+	    }
+
+    } while (changed);
+  }
 	public static void main(String[] args) {
 		Parser p = new Parser();
+
+		for (NonTerminal nt : p.nonTerminals) {
+		  System.out.println(nt);
+		}
+
+		for (NonTerminal nt : p.nonTerminals) {
+		  System.out.printf("First(%s) = %s\n", nt.getText(), nt.firstSet.toString());
+		}
+		System.out.println();
+		for (NonTerminal nt : p.nonTerminals) {
+		  System.out.printf("Follow(%s) = %s\n", nt.getText(), nt.followSet.toString());
+		}
 	}
 }

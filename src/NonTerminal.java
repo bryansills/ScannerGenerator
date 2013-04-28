@@ -4,34 +4,34 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * We assume any symbol whose first and last characters are '<' and '>' are 
- * nonterminals. The first and follow sets of each nonterminal live here. Also 
+ * We assume any symbol whose first and last characters are '<' and '>' are
+ * nonterminals. The first and follow sets of each nonterminal live here. Also
  * contains a list of rules.
- * 
+ *
  * @author dgreenhalgh
  *
  */
 public class NonTerminal extends Symbol {
-	
+
 	private List<Rule> rules = new ArrayList<Rule>();
 
   Set<Token> firstSet = new HashSet<Token>();
 	Set<Token> followSet = new HashSet<Token>();
-	
+
 	public NonTerminal() {}
-	
+
 	public NonTerminal(String text) {
 		super(text);
 	}
-	
+
 	public NonTerminal(String text, boolean isStart) {
 		super(text);
 	}
-	
+
 	public List<Rule> getRules() {
 		return rules;
 	}
-	
+
 	public void addRule(Rule rule) {
 		if(!rules.contains(rule))
 			rules.add(rule);
@@ -52,8 +52,22 @@ public class NonTerminal extends Symbol {
   public boolean addAllToFirstSet(Set<Token> tokens) {
     return firstSet.addAll(tokens);
   }
+  public boolean addToFollowSet(Token token) {
+    return followSet.add(token);
+  }
 
-	public String toString() {
-		return super.toString();
+  public boolean addAllToFollowSet(Set<Token> tokens) {
+    return followSet.addAll(tokens);
+  }
+
+
+
+	@Override
+  public String toString() {
+	  String s = "";
+		for (Rule r : rules) {
+		    s += String.format("%s -> %s\n", getText(), r.toString());
+		}
+		return s;
 	}
 }
