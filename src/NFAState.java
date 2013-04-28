@@ -13,7 +13,6 @@ public class NFAState {
     private Set<Character> transition;
     private List<NFAState> nextStates;
     private boolean accept;
-    private boolean visited;
     private String name;
 
     public Builder() {
@@ -44,11 +43,6 @@ public class NFAState {
       return this;
     }
 
-    private Builder setVisited(boolean visited) {
-      this.visited = visited;
-      return this;
-    }
-
     private Builder setName(String name) {
       this.name = name;
       return this;
@@ -64,7 +58,7 @@ public class NFAState {
   private Set<Character> transition;
   private List<NFAState> nextStates;
   private boolean accept;
-  private boolean visited;
+  private boolean isStart;
   private int id;
   private String name;
 
@@ -73,7 +67,6 @@ public class NFAState {
     this.accept = b.accept;
     this.transition = b.transition;
     this.nextStates = b.nextStates;
-    this.visited = b.visited;
     this.name = b.name;
   }
 
@@ -181,6 +174,11 @@ public class NFAState {
   public List<NFAState> getNextStates() {
     return nextStates;
   }
+
+  public boolean getIsStart() {
+	  return isStart;
+  }
+
   public NFAState copy() {
     return NFAState.builder()
         .setAccept(accept)

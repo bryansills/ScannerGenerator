@@ -17,8 +17,7 @@ public class NFA {
   private NFAState end;
 
   public NFA() {
-    this.start = this.end = NFAState.builder()
-        .build();
+    this.start = this.end = NFAState.builder().build();
   }
 
   /**
