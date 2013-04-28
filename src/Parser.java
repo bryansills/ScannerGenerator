@@ -26,7 +26,23 @@ public class Parser {
 			while(in.hasNextLine()) {
 				String s = in.nextLine();
 
-				NonTerminal nt = tokenizeLeftHandSide(s);
+				NonTerminal nt = parseLine(s);
+
+        NonTerminal prev = null;
+        for (NonTerminal nTerm : nonTerminals) {
+          if (nTerm.getText().equals(nt.getText())) {
+            prev = nTerm;
+          }
+        }
+
+        if (prev == null) {
+          nonTerminals.add(nt);
+        } else {
+          for (Rule rule : nt.getRules()) {
+            prev.addRule(rule);
+          }
+        }
+
 				tokenizeRules(nt);
 			}
 		} catch (FileNotFoundException e) {
@@ -37,87 +53,79 @@ public class Parser {
 	}
 	
 	/**
-	 * Tokenize nonterminals on left-hand side
+	 * Parses the string and creates a nonterminal out of the contents
 	 * 
 	 * @param s Next line in grammar
 	 * @return nt The nonterminal on line s
 	 */
-	public NonTerminal tokenizeLeftHandSide(String s) {
+	public NonTerminal parseLine(String s) {
 		NonTerminal nt = new NonTerminal();
 		
 		String[] ruleDivided = s.split("::=");
 		nt.setText(ruleDivided[0].trim());
 		for(String ruleStr : ruleDivided[1].split("\\|")) {
-			Rule r = new Rule();
-			nt.addRule(r);
-			for(int i = 0; i < ruleStr.length(); i++) {
-				if((ruleStr.charAt(i) == '<') && (ruleStr.length() > 0)) {
-					String ntTemp = "";
-					while(ruleStr.charAt(i) != '>') {
-						ntTemp += ruleStr.charAt(i);
-						i++;
-					}
-					ntTemp += '>';
-					r.addToRule(ntTemp);
-				}
-			}
-			String[] splitSpace = ruleStr.split(" ");
-			for(String spaces : splitSpace) {
-				if(!spaces.contains("<") && (spaces.length() > 0))
-					r.addToRule(spaces);
-			}
-		}
-		
-		int i = 0;
-		boolean contains = false;
-		List<NonTerminal> ntList = new ArrayList<NonTerminal>(nonTerminals);
-		
-		if(nonTerminals.size() > 0) {
-			while(i < ntList.size() && !contains) {
-				if(ntList.get(i).getText().equals(nt.getText())) {
-					contains = true;
-					for(Rule r : nt.getRules())
-						ntList.get(i).addRule(r);
-				}
-				
-				i++;				
-			}
-			
-			if(!contains)
-				nonTerminals.add(nt);
-		}
-		else {
-			nonTerminals.add(nt);
+      String[] ruleToken = tokenizeRule(ruleStr.trim());
+      nt.addRule(new Rule(ruleToken));
 		}
 		
 		return nt;
 	}
-	
-	/**
-	 * Tokenizes a nonterminal's rules and adds those tokens to a list
+
+  /**
+   * Parses the contents of a rule and tokenizes the contents
+   * @param str the string to be tokenized
+   * @return string array containing all the contents
+   */
+  public String[] tokenizeRule(String str) {
+    String[] splitOnSpace = str.split(" ");
+    List<String> tokenizedStrings = new ArrayList<String>();
+
+    for(int ii = 0; ii < splitOnSpace.length; ii++) {
+      if (splitOnSpace[ii].indexOf('<') > 0) {
+        String pre = splitOnSpace[ii].substring(0, splitOnSpace[ii].indexOf('<'));
+        tokenizedStrings.add(pre);
+        splitOnSpace[ii] = splitOnSpace[ii].substring(splitOnSpace[ii].indexOf('<'));
+      }
+      while (splitOnSpace[ii].contains("<")) {
+        int endIndex = splitOnSpace[ii].indexOf('>');
+        String tok = splitOnSpace[ii].substring(0, endIndex);
+        tokenizedStrings.add(tok);
+        splitOnSpace[ii] = splitOnSpace[ii].substring(splitOnSpace[ii].indexOf('>') + 1);
+      }
+      if(splitOnSpace[ii].length() > 0) {
+        tokenizedStrings.add(splitOnSpace[ii]);
+      }
+    }
+
+    return tokenizedStrings.toArray(new String[tokenizedStrings.size()]);
+  }
+
+  /**
+	 * Adds all the tokens to a list
 	 */
 	public void tokenizeRules(NonTerminal nt) {
 		for(Rule r : nt.getRules()) {
 			for(Symbol sym : r.getRule()) {
 				if(!sym.getText().contains("<") && (sym.getText().length() > 0)) {
-					int i = 0;
 					boolean contains = false;
-					
-					while(i < tokens.size()) {
-						if(tokens.get(i).getText().equals(sym.getText()))
-							contains = true;
-						
-						i++;
+					for (Token token : tokens) {
+						if(token.getText().equals(sym.getText())) {
+              contains = true;
+            }
 					}
 					
-					if(!contains)
-						tokens.add(new Token(sym.getText()));
+					if(!contains) {
+						tokens.add((Token) sym);
+          }
 				}
 			}
 		}
 	}
 
-
+  /**
+   * creates the first sets for all the nonterminals
+   * @param nonterminals
+   */
   public static void createFirstSets(Set<NonTerminal> nonterminals) {
     List<NonTerminal> nontermQueue = new ArrayList<NonTerminal>(nonterminals);
 
