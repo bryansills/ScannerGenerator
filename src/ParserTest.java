@@ -159,21 +159,21 @@ public class ParserTest {
         boolean test11 = false;
         boolean test12 = false;
         for (Symbol sym : iter.next().getFirstSet()) {
-            if (sym.getText().equals("if")) {
-                test7 = true;
-            } else if (sym.getText().equals("other")) {
-                test8 = true;
-            } else if (sym.getText().equals("else")) {
-                test9 = true;
-            } else if (sym.getText().equals("0")) {
-                test10 = true;
-            } else if (sym.getText().equals("1")) {
-                test11 = true;
-            } else if (sym.getText().equals("<epsilon>")) {
-                test12 = true;
-            } else {
-                throw new Exception();
-            }
+          if (sym.getText().equals("if")) {
+            test7 = true;
+          } else if (sym.getText().equals("other")) {
+            test8 = true;
+          } else if (sym.getText().equals("else")) {
+            test9 = true;
+          } else if (sym.getText().equals("0")) {
+            test10 = true;
+          } else if (sym.getText().equals("1")) {
+            test11 = true;
+          } else if (sym.getText().equals("<epsilon>")) {
+            test12 = true;
+          } else {
+            throw new Exception();
+          }
         }
         assertTrue(test7);
         assertFalse(test8);
