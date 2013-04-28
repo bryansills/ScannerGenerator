@@ -19,8 +19,17 @@ public class Rule {
 		rule = new ArrayList<Symbol>();
 		for(String sym : ruleStr) {
 			String trimSym = sym.trim();
-			if(trimSym.length() > 0)
-				rule.add(new Symbol(trimSym));
+			if(trimSym.length() > 0) {
+        if (trimSym.equals("<epsilon>")) {
+          rule.add(new Terminal("<epsilon>"));
+        } else if (trimSym.matches("<.*>")) {
+          rule.add(new NonTerminal(trimSym));
+        } else if (trimSym.matches("[^A-Z]*")) {
+          rule.add(new Terminal(trimSym));
+        } else if (trimSym.matches("[^a-z]*")){
+          rule.add(new Identifier(trimSym));
+        }
+      }
 		}
 	}
 	
@@ -38,6 +47,11 @@ public class Rule {
 	@Override
 	public boolean equals(Object o) {
 		boolean equals = true;
+
+    /* Basic equals cases */
+    if (o == null || !(o instanceof Rule)) {
+      return false;
+    }
 		
 		/* Special size cases */
 		if((this.getRule().size() == 0) && (((Rule)o).getRule().size() == 0))

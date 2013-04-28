@@ -14,9 +14,9 @@ import java.util.Set;
 public class NonTerminal extends Symbol {
 	
 	private List<Rule> rules = new ArrayList<Rule>();
-	
-	Set<NonTerminal> firstSet = new HashSet<NonTerminal>();
-	Set<NonTerminal> followSet = new HashSet<NonTerminal>();
+
+  Set<Token> firstSet = new HashSet<Token>();
+	Set<Token> followSet = new HashSet<Token>();
 	
 	public NonTerminal() {}
 	
@@ -36,6 +36,22 @@ public class NonTerminal extends Symbol {
 		if(!rules.contains(rule))
 			rules.add(rule);
 	}
+
+  public Set<Token> getFirstSet() {
+    return firstSet;
+  }
+
+  public void setFirstSet(Set<Token> firstSet) {
+    this.firstSet = firstSet;
+  }
+
+  public boolean addToFirstSet(Token token) {
+    return firstSet.add(token);
+  }
+
+  public boolean addAllToFirstSet(Set<Token> tokens) {
+    return firstSet.addAll(tokens);
+  }
 
 	public String toString() {
 		return super.toString();

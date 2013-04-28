@@ -52,7 +52,6 @@ public class ScannerGenerator {
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
-
       // read in input file
       in = new BufferedReader(new FileReader(new File(args[1])));
       List<String> inputs = new ArrayList<String>();
