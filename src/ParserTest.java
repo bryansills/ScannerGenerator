@@ -1,5 +1,5 @@
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class ParserTest {
         Rule cRule = new Rule(new String[]{"s"});
         cNonTerm.addRule(cRule);
 
-        Set<NonTerminal> grammar = new HashSet<NonTerminal>();
+        Set<NonTerminal> grammar = new LinkedHashSet<NonTerminal>();
         grammar.add(aNonTerm);
         grammar.add(bNonTerm);
         grammar.add(cNonTerm);
@@ -113,7 +113,7 @@ public class ParserTest {
         dNonTerm.addRule(dRule);
         dNonTerm.addRule(dRuleTwo);
 
-        Set<NonTerminal> grammar = new HashSet<NonTerminal>();
+        Set<NonTerminal> grammar = new LinkedHashSet<NonTerminal>();
         grammar.add(aNonTerm);
         grammar.add(bNonTerm);
         grammar.add(cNonTerm);
