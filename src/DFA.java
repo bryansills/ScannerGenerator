@@ -1,139 +1,141 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
+
 public class DFA {
-	private DFAState start;
-	private DFAState curr;
-	private List<NFAState> nfaStates;
-	private List<Set<Character>> transitionsSeen;
-	private NFAState focus;
-	private List<NFAState> visited;
-	
-	public DFA() {}
-	
-	public DFA(Set<Character> chars) {}
-	
-	/**
-	 * Constructor that builds a DFA out of an NFA.
-	 * @param nfa
-	 */
-	public DFA(NFA nfa) {
-		nfaToDfa(nfa);
-	}
-	
-	public DFAState getStartState() {
-		return start;
-	}
-	
-	public void setStartState(DFAState newStart) {
-		start = newStart;
-	}
-	
-	/**
-	 * Takes in an NFA and converts it to a DFA
-	 * @param nfa
-	 */
-	public void nfaToDfa(NFA nfa) {
-		focus = nfa.getStartState();
-		nfaStates = nfa.getAllStates();
-		transitionsSeen = new ArrayList<Set<Character>>();
-		visited = new ArrayList<NFAState>();
-		start = DFAState.builder()
-				.setFirstId(nfaStates.indexOf(focus))
-				.setIsStart(true)
-				.build();
-		this.setStartState(start);
-		visited.add(nfa.getStartState());
-		
-		for(NFAState state : nfa.getStartState().getNextStates()) {
-			curr = start;
-			curr.addToIdList(nfaStates.indexOf(state));
-			explore(state);
-		}
-	}
-	
-	/**
-	 * A recursive helper method for nfaToDfa
-	 * 
-	 * @param state A pointer to the state currently being looked at
-	 */
-	public void explore(NFAState state) {
-		visited.add(state);
-		for(NFAState nextState : state.getNextStates()) {
-			if(nextState.getTransition() == null) {
-				curr.addToIdList(nfaStates.indexOf(state));
-				
-				if(state.isAccept()) {
-					curr.setAccept(true);
-				}
-				if(state.getIsStart()) {
-					curr.setIsStart(true);
-				}
-			}
-			else if(!transitionsSeen.contains(nextState.getTransition())) {
-				curr.addNext(DFAState.builder()
-						.setAccept(false)
-						.setTransition(nextState.getTransition())
-						.build());
-				
-				transitionsSeen.add(nextState.getTransition());
-				curr = curr.next(nextState.getTransition());
-				curr.addToIdList(nfaStates.indexOf(state));
-				
-				if(state.isAccept()) {
-					curr.setAccept(true);
-				}
-				if(state.getIsStart()) {
-					curr.setIsStart(true);
-				}
-			}
-			else {
-				for(DFAState d : this.getAllStates()) {
-					if(d.getTransition() == nextState.getTransition()) {
-						curr = d;
-						curr.addToIdList(nfaStates.indexOf(state));
-						
-						if(state.isAccept()) {
-							curr.setAccept(true);
-						}
-						if(state.getIsStart()) {
-							curr.setIsStart(true);
-						}
-					}
-				}
-			}
-			explore(nextState);
-		}
-	}
-	
-	/**
-	 * @return A list of all of the DFAStates in the DFA
-	 */
-	public List<DFAState> getAllStates() {
-		List<DFAState> allStates = new ArrayList<DFAState>();
-		
-		Set<DFAState> discovered = new HashSet<DFAState>();
-		Stack<DFAState> nextStatesToExplore = new Stack<DFAState>();
-		DFAState temp = this.getStartState();
-		nextStatesToExplore.push(temp);
-		
-		while(!nextStatesToExplore.empty()) {
-			temp = nextStatesToExplore.pop();
-			allStates.add(temp);
-			
-			for(DFAState nextState : temp.getNextStates()) {
-				if((!nextStatesToExplore.contains(nextState))
-						&& (!discovered.contains(nextState))) {
-					nextStatesToExplore.push(nextState);
-				}
-			}
-			
-			discovered.add(temp);
-		}
-		
-		return allStates;
-	}
+  private Map<DFAState, Map<Character, DFAState>> table;
+  private DFAState start;
+  public DFA() {
+    table = new HashMap<DFAState, Map<Character, DFAState>>();
+  }
+  // performs epsilon closure
+  public static DFAState nfaStateToDfaState(NFAState state) {
+    DFAState start = new DFAState();
+    start.add(state);
+
+    Stack<NFAState> stack = new Stack<NFAState>();
+    Set<NFAState> visited = new HashSet<NFAState>();
+    List<NFAState> epsilons = new ArrayList<NFAState>();
+    stack.add(state);
+    visited.add(state);
+    while (!stack.isEmpty()) {
+      NFAState cur = stack.pop();
+      List<NFAState> succ = cur.getNextStates();
+      for (NFAState next : succ) {
+        if (next.getTransition() == null) {
+          stack.add(next);
+          visited.add(next);
+        }
+      }
+    }
+    for (NFAState n : visited) {
+      start.add(n);
+    }
+    return start;
+  }
+  public static void printTable(DFA d) {
+    for (DFAState row : d.table.keySet()) {
+      for (Entry<Character, DFAState> col : d.table.get(row).entrySet()) {
+        System.out.println(row.getId() + ":" + row + " - " + col.getKey() +  " > " + col.getValue().getId() + ":" + col.getValue());
+      }
+    }
+  }
+  public static DFA nfaToDfa(NFA nfa) {
+    Queue<DFAState> queue = new LinkedList<DFAState>();
+    Set<DFAState> visited = new HashSet<DFAState>();
+    Set<Integer> test = new HashSet<Integer>();
+    DFAState start = nfaStateToDfaState(nfa.getStartState());
+    queue.add(start);
+    Map<DFAState, Map<Character, DFAState>> table =
+        new HashMap<DFAState, Map<Character, DFAState>>();
+
+    Map<Integer, DFAState> stateMap = new HashMap<Integer, DFAState>();
+
+    while (!queue.isEmpty()) {
+      DFAState cur = queue.remove();
+      if (visited.contains(cur)) {
+        continue;
+      }
+      visited.add(cur);
+
+      Map<Character, DFAState> transitionMap = new HashMap<Character, DFAState>();
+      List<NFAState> innerStates = new ArrayList<NFAState>(cur.getInnerStates());
+      for (NFAState succ : innerStates) {
+        for (NFAState after : succ.getNextStates()) {
+          boolean seen = false;
+          if (test.contains(after.getId())) {
+            seen = true;
+          }
+          test.add(after.getId());
+          if (after.getTransition() != null) {
+            DFAState dfaAfter = nfaStateToDfaState(after);
+            for (NFAState ns : dfaAfter.getInnerStates()) {
+              if (stateMap.containsKey(ns.getId())) {
+                DFAState existing = stateMap.get(ns.getId());
+                existing.add(dfaAfter);
+                dfaAfter = existing;
+                break;
+              } else {
+                stateMap.put(ns.getId(), dfaAfter);
+              }
+            }
+            for (Character c : after.getTransition()) {
+              if (transitionMap.containsKey(c)) {
+                transitionMap.get(c).add(dfaAfter);
+              } else {
+                transitionMap.put(c, dfaAfter);
+              }
+            }
+            if (!seen) {
+              queue.add(dfaAfter);
+            }
+          }
+        }
+      }
+      table.put(cur, transitionMap);
+    }
+
+    DFA result = new DFA();
+    result.setStart(start);
+    result.setTable(table);
+
+    return result;
+  }
+
+  public boolean accepts(String s) {
+    DFAState cur = start;
+    for (Character c : s.toCharArray()) {
+      Map<Character, DFAState> col = table.get(cur);
+      if (col.containsKey(c)) {
+        cur = col.get(c);
+      } else {
+        return false;
+      }
+    }
+    for (NFAState in : cur.getInnerStates()) {
+      if (in.isAccept()) return true;
+    }
+    return false;
+  }
+
+  public Map<DFAState, Map<Character, DFAState>> getTable() {
+    return table;
+  }
+  public void setTable(Map<DFAState, Map<Character, DFAState>> table) {
+    this.table = table;
+  }
+  public DFAState getStart() {
+    return start;
+  }
+  public void setStart(DFAState start) {
+    this.start = start;
+  }
 }

@@ -18,6 +18,7 @@ public class NFAOperations {
 
 	  	for(NFAState acceptState : acceptStates) {
 	  		acceptState.addNext(nfa_b.getStartState());
+	  		nfa_a.setEnd(nfa_b.getEnd());
 	  		acceptState.setAccept(false);
 	  	}
 	  	// set accept state of a next to start state of b
@@ -55,6 +56,7 @@ public class NFAOperations {
 	  		acceptState.addNext(finalState);
 	  		acceptState.setAccept(false);
 	  	}
+  		newNFA.setEnd(finalState);
 
 	  	return newNFA;
   	}
@@ -75,6 +77,7 @@ public class NFAOperations {
   		nfa_a.getStartState().setAccept(true);
   		nfa_a.getStartState().setTransition(null);
 
+  		nfa_a.setEnd(nfa_a.getStartState());
       return nfa_a;
   	}
 
