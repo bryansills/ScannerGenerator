@@ -33,7 +33,7 @@ public class Parser {
 			e.printStackTrace();
 		}
 
-        createFirstSets(nonTerminals);
+    createFirstSets(nonTerminals);
 	}
 	
 	/**
@@ -118,100 +118,100 @@ public class Parser {
 	}
 
 
-    public static void createFirstSets(Set<NonTerminal> nonterminals) {
-        List<NonTerminal> nontermQueue = new ArrayList<NonTerminal>(nonterminals);
+  public static void createFirstSets(Set<NonTerminal> nonterminals) {
+    List<NonTerminal> nontermQueue = new ArrayList<NonTerminal>(nonterminals);
 
-        while (!nontermQueue.isEmpty()) {
-            NonTerminal nTerm = nontermQueue.remove(0);
+    while (!nontermQueue.isEmpty()) {
+      NonTerminal nTerm = nontermQueue.remove(0);
 
-            for (Rule rule : nTerm.getRules()) {
-                List<Symbol> symbolList = rule.getRule();
-                Symbol symbol;
-                int idx = 0;
-                boolean cont = true;
-                boolean result;
+      for (Rule rule : nTerm.getRules()) {
+        List<Symbol> symbolList = rule.getRule();
+        Symbol symbol;
+        int idx = 0;
+        boolean cont = true;
+        boolean result;
 
-                while (cont && idx < symbolList.size()) {
-                    symbol = symbolList.get(idx);
-                    NonTerminal next = null;
-                    for (NonTerminal item : nonterminals) {
-                        if (item.getText().equals(symbol.getText())) {
-                            next = item;
-                        }
-                    }
-
-                    if (next == null) {
-                        if (symbol instanceof Identifier) {
-                            cont = false;
-                            result = nTerm.addToFirstSet((Identifier)symbol);
-                            if (result) {
-                                for (NonTerminal ter : nonterminals) {
-                                    if (!nontermQueue.contains(ter)) {
-                                        nontermQueue.add(ter);
-                                    }
-                                }
-                            }
-                        } else if (symbol instanceof Terminal) {
-                            cont = false;
-                            result = nTerm.addToFirstSet((Terminal)symbol);
-                            if (result) {
-                                for (NonTerminal ter : nonterminals) {
-                                    if (!nontermQueue.contains(ter)) {
-                                        nontermQueue.add(ter);
-                                    }
-                                }
-                            }
-                        } else {
-                            try {
-                                throw new Exception("YOU SHOULDN'T BE HERE.");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } else {
-                        Set<Token> nextFirstSet = next.getFirstSet();
-                        if (nextFirstSet.isEmpty()) {
-                            cont = false;
-                        } else {
-                            Terminal epsilon = null;
-                            for (Symbol firstToken : nextFirstSet) {
-                                if (firstToken.getText().equals("<epsilon>")) {
-                                    epsilon = (Terminal) firstToken;
-                                }
-                            }
-
-                            if (epsilon != null) {
-                                nextFirstSet.remove(epsilon);
-                            } else {
-                                cont = false;
-                            }
-
-                            result = nTerm.addAllToFirstSet(nextFirstSet);
-                            if (result) {
-                                for (NonTerminal ter : nonterminals) {
-                                    if (!nontermQueue.contains(ter)) {
-                                        nontermQueue.add(ter);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    idx++;
-                }
-                if (cont) {
-                    result = nTerm.addToFirstSet(new Terminal("<epsilon>"));
-                    if (result) {
-                        for (NonTerminal ter : nonterminals) {
-                            if (!nontermQueue.contains(ter)) {
-                                nontermQueue.add(ter);
-                            }
-                        }
-                    }
-                }
+        while (cont && idx < symbolList.size()) {
+          symbol = symbolList.get(idx);
+          NonTerminal next = null;
+          for (NonTerminal item : nonterminals) {
+            if (item.getText().equals(symbol.getText())) {
+              next = item;
             }
+          }
+
+          if (next == null) {
+            if (symbol instanceof Identifier) {
+              cont = false;
+              result = nTerm.addToFirstSet((Identifier)symbol);
+              if (result) {
+                for (NonTerminal ter : nonterminals) {
+                  if (!nontermQueue.contains(ter)) {
+                    nontermQueue.add(ter);
+                  }
+                }
+              }
+            } else if (symbol instanceof Terminal) {
+              cont = false;
+              result = nTerm.addToFirstSet((Terminal)symbol);
+              if (result) {
+                for (NonTerminal ter : nonterminals) {
+                  if (!nontermQueue.contains(ter)) {
+                    nontermQueue.add(ter);
+                  }
+                }
+              }
+            } else {
+              try {
+                throw new Exception("YOU SHOULDN'T BE HERE.");
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+          } else {
+            Set<Token> nextFirstSet = next.getFirstSet();
+            if (nextFirstSet.isEmpty()) {
+              cont = false;
+            } else {
+              Terminal epsilon = null;
+              for (Symbol firstToken : nextFirstSet) {
+                if (firstToken.getText().equals("<epsilon>")) {
+                  epsilon = (Terminal) firstToken;
+                }
+              }
+
+              if (epsilon != null) {
+                nextFirstSet.remove(epsilon);
+              } else {
+                cont = false;
+              }
+
+              result = nTerm.addAllToFirstSet(nextFirstSet);
+              if (result) {
+                for (NonTerminal ter : nonterminals) {
+                  if (!nontermQueue.contains(ter)) {
+                    nontermQueue.add(ter);
+                  }
+                }
+              }
+            }
+          }
+
+          idx++;
         }
+        if (cont) {
+          result = nTerm.addToFirstSet(new Terminal("<epsilon>"));
+          if (result) {
+            for (NonTerminal ter : nonterminals) {
+              if (!nontermQueue.contains(ter)) {
+                nontermQueue.add(ter);
+              }
+            }
+          }
+        }
+      }
     }
+  }
 	
 	public static void main(String[] args) {
 		Parser p = new Parser();

@@ -37,21 +37,21 @@ public class NonTerminal extends Symbol {
 			rules.add(rule);
 	}
 
-    public Set<Token> getFirstSet() {
-        return firstSet;
-    }
+  public Set<Token> getFirstSet() {
+    return firstSet;
+  }
 
-    public void setFirstSet(Set<Token> firstSet) {
-        this.firstSet = firstSet;
-    }
+  public void setFirstSet(Set<Token> firstSet) {
+    this.firstSet = firstSet;
+  }
 
-    public boolean addToFirstSet(Token token) {
-        return firstSet.add(token);
-    }
+  public boolean addToFirstSet(Token token) {
+    return firstSet.add(token);
+  }
 
-    public boolean addAllToFirstSet(Set<Token> tokens) {
-        return firstSet.addAll(tokens);
-    }
+  public boolean addAllToFirstSet(Set<Token> tokens) {
+    return firstSet.addAll(tokens);
+  }
 
 	public String toString() {
 		return super.toString();
