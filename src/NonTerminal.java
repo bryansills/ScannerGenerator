@@ -16,7 +16,7 @@ public class NonTerminal extends Symbol {
 	private List<Rule> rules = new ArrayList<Rule>();
 
   Set<Token> firstSet = new HashSet<Token>();
-	Set<NonTerminal> followSet = new HashSet<NonTerminal>();
+	Set<Token> followSet = new HashSet<Token>();
 	
 	public NonTerminal() {}
 	
