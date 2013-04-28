@@ -13,8 +13,8 @@ public class DFAState {
 
   public DFAState() {
     id = Count++;
-    innerStates = new HashSet<>();
-    transition = new HashSet<>();
+    innerStates = new HashSet<NFAState>();
+    transition = new HashSet<Character>();
   }
 
   public Set<NFAState> getInnerStates() {
