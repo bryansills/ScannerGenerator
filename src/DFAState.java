@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Set;
 
 
-public class MyDFAState {
+public class DFAState {
   private Set<NFAState> innerStates;
   private Set<Character> transition;
   private boolean accept;
   private int id;
   private static int Count = 0;
 
-  public MyDFAState() {
+  public DFAState() {
     id = Count++;
     innerStates = new HashSet<>();
     transition = new HashSet<>();
@@ -38,7 +38,7 @@ public class MyDFAState {
   public void add(NFAState s) {
     innerStates.add(s);
   }
-  public void add(MyDFAState d) {
+  public void add(DFAState d) {
     innerStates.addAll(d.innerStates);
   }
 
@@ -53,16 +53,8 @@ public class MyDFAState {
   public int getId() {
     return id;
   }
-  public boolean equals(MyDFAState other) {
+  public boolean equals(DFAState other) {
     return other.id == id;
-    /*boolean eq = true;
-    for (NFAState inner : other.innerStates) {
-      if (!innerStates.contains(inner)) {
-        System.out.println("wtf");
-        eq = false;
-      }
-    }
-    return eq;*/
   }
   public NFAState getAcceptingState() {
     for (NFAState n : innerStates) {

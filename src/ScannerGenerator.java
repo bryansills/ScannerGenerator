@@ -47,28 +47,20 @@ public class ScannerGenerator {
         nfas.put(entry.getKey(), new NFA(entry.getValue()));
       }
       Map<String, NFA> regMap = new HashMap<String, NFA>();
-      Map<String, MyDFA> dfaMap = new HashMap<String, MyDFA>();
+      Map<String, DFA> dfaMap = new HashMap<String, DFA>();
 
       for (String regex : spec) {
         String[] temp = regex.split(" ", 2);
         regMap.put(temp[0], rd(temp[1], nfas));
       }
 
-      // later
       for (Entry<String, NFA> nfa : regMap.entrySet()) {
         nfa.getValue().getEnd().setName(nfa.getKey());
       }
 
       for (Entry<String, NFA> nfa : regMap.entrySet()) {
-        dfaMap.put(nfa.getKey(), MyDFA.nfaToDfa(nfa.getValue()));
+        dfaMap.put(nfa.getKey(), DFA.nfaToDfa(nfa.getValue()));
       }
-
-
-      /*for (NFA nfa : regMap.values()) {
-        System.out.println(nfa.getEnd().getName() + " " + nfa.getEnd().isAccept());
-        System.out.println("End state: " + nfa.getEnd().getId());
-        System.out.println(nfa);
-      }*/
 
       // read in input file
       in = new BufferedReader(new FileReader(new File(args[1])));
@@ -84,28 +76,9 @@ public class ScannerGenerator {
       for (String input : inputs) {
         List<String> toks = breakLine(input, new char[]{'"', '[', '\''}, new char[]{'"', ']', '\''});
         for (String t : toks) {
-          walk(t, regMap, out);
           walkdfa(t, dfaMap, out);
         }
       }
-
-      /*for (Entry<String, NFA> nfa : regMap.entrySet()) {
-        System.out.println(nfa.getKey() + " = " + nfa.getValue() + "\n\n");
-
-      }*/
-      //System.out.println(regMap.get("$IDENTIFIER"));
-      /*List<NFA> nfaList = new ArrayList<NFA>(regMap.values());
-      NFA big = nfaList.get(0);
-      for (int i = 1; i < nfaList.size(); i++) {
-        big = NFAOperations.union(big, nfaList.get(i));
-      }
-      MyDFA asdf = MyDFA.nfaToDfa(big);
-      asdf.validate("a999b".toCharArray());
-      asdf.validate("9".toCharArray());
-      asdf.validate("ab".toCharArray());
-      asdf.validate("a".toCharArray());
-      asdf.validate("".toCharArray());*/
-
 
       out.close();
     } catch (FileNotFoundException e) {
@@ -154,25 +127,23 @@ public class ScannerGenerator {
       }
     }
 
-
-
     return tokens;
   }
-  private static void walkdfa(String s, Map<String, MyDFA> map, PrintWriter out) {
+  private static void walkdfa(String s, Map<String, DFA> map, PrintWriter out) {
     while (s.length() > 0) {
       String acceptedDfa = "";
       int lastAccept = -1;
       String sub = "";
       for (int i = 1; i <= s.length(); i++) {
         sub = s.substring(0, i);
-        for (Entry<String, MyDFA> dfa : map.entrySet()) {
+        for (Entry<String, DFA> dfa : map.entrySet()) {
           if (dfa.getValue().accepts(sub)) {
             lastAccept = i;
             acceptedDfa = dfa.getKey().substring(1);
           }
         }
       }
-      System.out.println("DFA: " + acceptedDfa + " " + s.substring(0, lastAccept));
+      out.println(acceptedDfa + " " + s.substring(0, lastAccept));
       s = s.substring(lastAccept);
     }
   }
@@ -190,7 +161,7 @@ public class ScannerGenerator {
           }
         }
       }
-      System.out.println("NFA: " + acceptedNfa + " " + s.substring(0, lastAccept));
+      out.println(acceptedNfa + " " + s.substring(0, lastAccept));
       s = s.substring(lastAccept);
     }
   }
